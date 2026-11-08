@@ -1,0 +1,15 @@
+[
+  { "id": "axe", "name": "Axe", "logo": "/assets/img/marca-axe.webp" },
+  { "id": "rinso", "name": "Rinso", "logo": "/assets/img/marca-rinso.webp" },
+  { "id": "pepsodent", "name": "Pepsodent", "logo": "/assets/img/marca-pepsodent.webp" },
+  { "id": "virgin-mobile", "name": "Virgin Mobile", "logo": "/assets/img/marca-virgin.webp" },
+  { "id": "unimarc", "name": "Unimarc", "logo": "/assets/img/marca-unimarc.webp" },
+  { "id": "bliss", "name": "Bliss (Nestlé)", "logo": "/assets/img/marca-bliss.webp" },
+  { "id": "quix", "name": "Quix", "logo": "/assets/img/marca-quix.webp" },
+  { "id": "pronto-copec", "name": "Pronto Copec", "logo": "/assets/img/marca-pronto.webp" },
+  { "id": "pizza-hut", "name": "Pizza Hut", "logo": "/assets/img/marca-pizzahut.webp" },
+  { "id": "campanario", "name": "Campanario", "logo": "/assets/img/marca-campanario.webp" },
+  { "id": "consalud", "name": "Consalud", "logo": "/assets/img/marca-consalud.webp" },
+  { "id": "kit-kat", "name": "Kit Kat (Nestlé)", "logo": "/assets/img/marca-kitkat.webp" },
+  { "id": "rexona", "name": "Rexona", "logo": "/assets/img/marca-rexona.webp" }
+]

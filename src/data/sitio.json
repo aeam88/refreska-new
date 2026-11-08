@@ -1,0 +1,40 @@
+[
+  {
+    "id": "principal",
+    "nombre": "Refreska",
+    "email": "info@refreska.cl",
+    "instagram": "https://www.instagram.com/refreska.cl",
+    "linkedin": "https://www.linkedin.com/company/refreska/",
+    "formOptions": {
+      "plazo": [
+        "Este mes",
+        "En 1-2 meses",
+        "En 3-4 meses",
+        "Más adelante",
+        "Solo explorando"
+      ],
+      "etapa": [
+        "Sin ventas todavía",
+        "Primeras ventas",
+        "Negocio en crecimiento",
+        "Empresa consolidada"
+      ],
+      "necesidad": [
+        "Crear una marca nueva",
+        "Renovar una marca existente",
+        "Diseñar envases o etiquetas",
+        "Crear o renovar un sitio web",
+        "Proyecto de branding integral",
+        "Necesito orientación"
+      ],
+      "presupuesto": [
+        "Menos de $600.000",
+        "$600.000 - $1.299.999",
+        "$1.300.000 - $1.999.999",
+        "$2.000.000 - $2.999.999",
+        "$3.000.000 o más",
+        "Aún por definir"
+      ]
+    }
+  }
+]

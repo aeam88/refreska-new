@@ -12,6 +12,16 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Lenis: desactiva el smooth nativo cuando controla el scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
 html,
 body {
   overflow-x: hidden;

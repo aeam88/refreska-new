@@ -1,0 +1,37 @@
+[
+  {
+    "id": "empresas",
+    "question": "¿Con qué tipo de empresas trabaja Refreska?",
+    "answer": "Trabajamos con empresas chilenas con ventas reales que necesitan una marca a la altura de su negocio: dueños de empresa y equipos de marketing en sectores como alimentos, bebidas, tecnología, retail y servicios. Si tu negocio está comenzando o aún no tienes un presupuesto definido, también puedes escribirnos: evaluamos el alcance, la inversión posible y el encaje del proyecto.\n\nPuedes revisar algunos casos en [nuestros proyectos](/proyectos)."
+  },
+  {
+    "id": "servicios",
+    "question": "¿Qué servicios de branding y diseño ofrecen?",
+    "answer": "Cubrimos desde naming, logotipos e identidades visuales hasta manuales de marca, packaging, etiquetas, catálogos, diseño UI/UX y desarrollo web. Más detalle en [branding](/branding), [diseño gráfico](/diseno) y [diseño web](/digital)."
+  },
+  {
+    "id": "proceso",
+    "question": "¿Cómo es el proceso de trabajo?",
+    "answer": "Empieza con una reunión de diagnóstico para entender tu negocio, tu competencia y tus objetivos. Luego presentamos una propuesta, trabajamos con revisiones estructuradas y entregamos archivos listos para producción. Sin idas y vueltas infinitas."
+  },
+  {
+    "id": "plazos",
+    "question": "¿Cuánto tiempo toma un proyecto de branding o diseño web?",
+    "answer": "Una identidad visual completa toma entre 3 y 6 semanas, y un sitio web entre 4 y 8 semanas. Los plazos dependen de la complejidad del proyecto y de la agilidad de las aprobaciones por parte del cliente."
+  },
+  {
+    "id": "inversion",
+    "question": "¿Cuánto cuesta un proyecto de branding o packaging?",
+    "answer": "Como referencia, un branding integral parte desde $1.300.000 + IVA y un proyecto de packaging o etiqueta desde $600.000 + IVA (CLP). El valor final depende del alcance y lo definimos en la propuesta, después de la reunión de diagnóstico.\n\nSi quieres entender qué influye en el precio, revisa [cuánto cuesta el branding en Chile](/blog/cuanto-cuesta-el-branding-en-chile)."
+  },
+  {
+    "id": "incluye",
+    "question": "¿Qué incluye un proyecto de branding completo?",
+    "answer": "Logo y variantes, paleta de colores, tipografías, sistema de iconografía y manual de marca con normas de aplicación para web, redes sociales, packaging y papelería. Opcionalmente, packaging, etiquetas y diseño web, según el alcance acordado."
+  },
+  {
+    "id": "remoto",
+    "question": "¿Trabajan con empresas fuera de Santiago?",
+    "answer": "Sí. El proceso es 100% remoto. Hemos trabajado con empresas de todo Chile y con proyectos en el extranjero."
+  }
+]

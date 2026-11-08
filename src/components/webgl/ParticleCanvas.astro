@@ -1,0 +1,265 @@
+---
+/**
+ * Capa WebGL fija + loader + HUD.
+ * Requiere: secciones con data-reveal en la página, y (si hay loader)
+ * data-intro en la sección hero.
+ */
+interface Props {
+  /** Contador de formas del morph (definido en shapes.ts) */
+  shapes?: number;
+  loader?: boolean;
+  hud?: boolean;
+  hint?: string;
+}
+
+const { shapes = 5, loader = false, hud = false, hint = '' } = Astro.props;
+const total = String(shapes).padStart(2, '0');
+---
+
+<canvas id="gl" data-shapes={shapes} aria-hidden="true"></canvas>
+
+{
+  loader && (
+    <div id="loader" aria-hidden="true">
+      <p class="loader-label">Armando partículas</p>
+      <div class="fill-line">
+        <i></i>
+      </div>
+    </div>
+  )
+}
+
+{
+  hud && (
+    <div class="hud" aria-hidden="true">
+      <b id="hud-num">01</b>
+      <span class="hud-bar">
+        <i id="hud-bar" />
+      </span>
+      <span>{total}</span>
+    </div>
+  )
+}
+
+{hint && <div class="hud-hint" aria-hidden="true">{hint}</div>}
+
+<script>
+  import { createParticles } from '../../scripts/webgl/scene';
+  import {
+    initSmoothScroll,
+    initSectionReveals,
+    gsap,
+    ScrollTrigger,
+    isReduced,
+  } from '../../scripts/motion/scroll';
+  import { runIntro } from '../../scripts/motion/intro';
+
+  const canvas = document.querySelector<HTMLCanvasElement>('canvas#gl');
+  const loaderEl = document.getElementById('loader');
+  const hudNum = document.getElementById('hud-num');
+  const hudBar = document.getElementById('hud-bar');
+  const shapeCount = Number(canvas?.dataset.shapes ?? 5);
+  const reduced = isReduced();
+
+  // Smooth scroll (Lenis + ScrollTrigger)
+  initSmoothScroll();
+
+  // Escena WebGL
+  const handle = canvas && !reduced ? createParticles(canvas) : null;
+
+  // Sin soporte o reduced-motion: el loader no tiene nada que esperar
+  if (loaderEl && !handle) loaderEl.remove();
+
+  // Sin loader: las partículas se muestran desde el inicio
+  if (handle && !loaderEl) {
+    handle.uniforms.uIntro.value = 1;
+  }
+
+  // Progreso de scroll global → morph de formas + HUD
+  const main = document.querySelector('main');
+  if (handle && main) {
+    ScrollTrigger.create({
+      trigger: main,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: (self) => {
+        handle.setTargetProgress(self.progress * (shapeCount - 1));
+        if (hudBar) hudBar.style.width = `${self.progress * 100}%`;
+        if (hudNum) {
+          const idx = Math.min(
+            shapeCount - 1,
+            Math.round(self.progress * (shapeCount - 1))
+          );
+          hudNum.textContent = String(idx + 1).padStart(2, '0');
+        }
+      },
+    });
+  }
+
+  const heroReveal = () => {
+    const hero =
+      document.querySelector<HTMLElement>('section[data-intro]') ??
+      document.querySelector<HTMLElement>('section');
+    if (!hero) return;
+
+    const rest = hero.querySelectorAll<HTMLElement>(
+      '.eyebrow, .lead, .btn, .tags span, [data-reveal-item]'
+    );
+    const chrome = ['#site-header', '.hud', '.hud-hint'].map((s) =>
+      document.querySelector(s)
+    ).filter(Boolean) as Element[];
+
+    if (rest.length)
+      gsap.from(rest, {
+        opacity: 0,
+        y: 20,
+        duration: 1,
+        stagger: 0.06,
+        delay: 0.2,
+      });
+    if (chrome.length)
+      gsap.from(chrome, {
+        opacity: 0,
+        y: 20,
+        duration: 1,
+        stagger: 0.06,
+        delay: 0.3,
+      });
+  };
+
+  if (loaderEl && handle) {
+    runIntro({
+      loaderEl,
+      ready: handle.ready,
+      uniforms: handle.uniforms,
+      onReveal: heroReveal,
+    });
+    initSectionReveals({ skipIntro: true });
+  } else {
+    initSectionReveals();
+  }
+</script>
+
+<style>
+  #gl {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: var(--z-canvas);
+    pointer-events: none;
+    display: block;
+  }
+
+  /* Loader — centrado y compacto */
+  #loader {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-loader);
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .loader-label {
+    color: var(--mute);
+    letter-spacing: 0.3em;
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+
+  /* Línea que se va llenando */
+  .fill-line {
+    width: min(260px, 64vw);
+    height: 2px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .fill-line i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--grad-btn);
+    border-radius: 2px;
+    animation: fill-up 1.6s var(--ease-out) forwards;
+  }
+
+  @keyframes fill-up {
+    to {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fill-line i {
+      animation: none;
+      width: 100%;
+    }
+  }
+
+  /* HUD de sección */
+  .hud {
+    position: fixed;
+    left: var(--pad-x);
+    bottom: 34px;
+    z-index: var(--z-nav);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--mute);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    mix-blend-mode: difference;
+  }
+
+  .hud b {
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .hud-bar {
+    width: 120px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    position: relative;
+    display: block;
+  }
+
+  .hud-bar i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: #fff;
+  }
+
+  .hud-hint {
+    position: fixed;
+    left: var(--pad-x);
+    bottom: 34px;
+    z-index: var(--z-nav);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--mute);
+    mix-blend-mode: difference;
+  }
+
+  @media (max-width: 760px) {
+    .hud-hint {
+      display: none;
+    }
+    .hud {
+      left: 20px;
+      bottom: 24px;
+    }
+  }
+</style>

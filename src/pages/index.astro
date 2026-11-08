@@ -1,114 +1,333 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ParticleCanvas from '../components/webgl/ParticleCanvas.astro';
 import Eyebrow from '../components/ui/Eyebrow.astro';
 import Btn from '../components/ui/Btn.astro';
 import Tag from '../components/ui/Tag.astro';
-import SectionHeading from '../components/ui/SectionHeading.astro';
+import LineReveal from '../components/ui/LineReveal.astro';
 ---
 
 <BaseLayout
   title="Refreska"
   description="Estudio de diseño y branding en Chile: identidad visual, packaging y sitios web para empresas en crecimiento."
+  hideFooter
 >
-  <section class="hero section">
-    <div class="container">
+  <ParticleCanvas loader hint="Haz click para estallar" />
+
+  <!-- 0 · Hero (forma: texto REFRESKA) -->
+  <section class="p-section center hero" data-reveal data-intro data-i="0">
+    <div class="p-block">
       <Eyebrow>Estudio de diseño & branding — Chile</Eyebrow>
-
       <h1>
-        <span class="line"><span>Hacemos <em class="grad-text">Branding</em></span></span>
-        <span class="line"><span>estratégico para empresas</span></span>
-        <span class="line"><span>que están <em class="grad-text">creciendo.</em></span></span>
+        <LineReveal as="span">Marcas que se</LineReveal>
+        <LineReveal as="span"><span class="grad-text">sienten vivas.</span></LineReveal>
       </h1>
-
-      <p class="lead hero-lead">
-        Ordenamos la identidad, el packaging y la web de marcas con ventas
-        reales, para que se vean tan profesionales como su negocio.
-      </p>
-
-      <div class="hero-cta">
-        <Btn href="/contacto#Form">Cuéntanos tu proyecto</Btn>
-        <Btn href="/proyectos" variant="outline">Ver proyectos</Btn>
+      <div class="hero-meta" data-reveal-item>
+        <div>estrategia<b>Branding</b></div>
+        <div>que vende<b>Packaging</b></div>
+        <div>presencia<b>Web</b></div>
       </div>
 
-      <div class="hero-tags">
-        <Tag>Branding</Tag>
-        <Tag>Identidad visual</Tag>
-        <Tag>Packaging</Tag>
-        <Tag>Sitios web</Tag>
+      <div class="scroll-ind" aria-hidden="true" data-reveal-item>
+        <span class="mouse"><i></i></span>
+        <span class="cue-line"></span>
       </div>
     </div>
   </section>
 
-  <section class="section demo">
-    <div class="container">
-      <SectionHeading
-        eyebrow="Design system"
-        lines={['Tokens, tipografía|| y componentes.', 'Todo listo para|| construir.']}
-      >
-        <p class="lead">
-          Esta página verifica fuentes (Syne + Inter), tokens de color y los
-          componentes UI base.
-        </p>
-      </SectionHeading>
-
-      <div class="swatches">
-        <div class="swatch" style="background: var(--c1)"><span>--c1</span></div>
-        <div class="swatch" style="background: var(--c2)"><span>--c2</span></div>
-        <div class="swatch" style="background: var(--c3)"><span>--c3</span></div>
-        <div class="swatch" style="background: var(--fg); color: var(--bg)"><span>--fg</span></div>
-        <div class="swatch" style="background: var(--bg-soft); border: 1px solid var(--line)"><span>--bg-soft</span></div>
+  <!-- 1 · Branding (forma: botella) -->
+  <section class="p-section right" data-reveal data-i="1">
+    <div class="p-block">
+      <Eyebrow>01 — Branding</Eyebrow>
+      <h2>
+        <LineReveal as="span">Identidad</LineReveal>
+        <LineReveal as="span"><span class="grad-text">con estrategia.</span></LineReveal>
+      </h2>
+      <p class="lead">
+        Naming, logotipo, sistema visual y manual de marca. Ordenamos cómo se
+        ve tu negocio para que transmita el nivel que ya tiene.
+      </p>
+      <div class="tags">
+        <Tag>Identidad visual</Tag>
+        <Tag>Naming</Tag>
+        <Tag>Manual de marca</Tag>
       </div>
+    </div>
+  </section>
+
+  <!-- 2 · Packaging (forma: lata) -->
+  <section class="p-section" data-reveal data-i="2">
+    <div class="p-block">
+      <Eyebrow>02 — Packaging</Eyebrow>
+      <h2>
+        <LineReveal as="span">Envases que</LineReveal>
+        <LineReveal as="span"><span class="grad-text">venden.</span></LineReveal>
+      </h2>
+      <p class="lead">
+        Diseño de etiquetas, cajas y sistema de gama pensados para el punto de
+        venta, listos para producción.
+      </p>
+      <div class="tags">
+        <Tag>Etiquetas</Tag>
+        <Tag>Sistema de gama</Tag>
+        <Tag>Arte final</Tag>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Alcance (forma: globo) -->
+  <section class="p-section right" data-reveal data-i="3">
+    <div class="p-block">
+      <Eyebrow>03 — Alcance</Eyebrow>
+      <h2>
+        <LineReveal as="span">De Chile</LineReveal>
+        <LineReveal as="span"><span class="grad-text">para todos lados.</span></LineReveal>
+      </h2>
+      <p class="lead">
+        Proceso 100% remoto con clientes de todo Chile y proyectos en el
+        extranjero. 15+ años de trayectoria al servicio de tu marca.
+      </p>
+      <div class="tags">
+        <Tag>Santiago</Tag>
+        <Tag>Remoto</Tag>
+        <Tag>Internacional</Tag>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · CTA (forma: nudo) -->
+  <section class="p-section center" data-reveal data-i="4">
+    <div class="p-block wide">
+      <Eyebrow>04 — Siguiente</Eyebrow>
+      <h2>
+        <LineReveal as="span">Hablemos de</LineReveal>
+        <LineReveal as="span"><span class="grad-text">tu marca.</span></LineReveal>
+      </h2>
+      <div class="cta">
+        <Btn href="/contacto#Form">Cuéntanos tu proyecto</Btn>
+      </div>
+      <p class="lead small">
+        © {new Date().getFullYear()} Refreska. Todos los derechos reservados.
+      </p>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .hero {
+  .p-section {
+    position: relative;
+    z-index: var(--z-main);
     min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
-    padding-top: 120px;
+    padding: 0 var(--pad-x);
   }
 
-  .hero :global(.eyebrow) {
-    margin-bottom: var(--space-md);
+  .p-section.right {
+    justify-content: flex-end;
+    text-align: right;
   }
 
-  .hero-lead {
-    margin-top: var(--space-md);
-    max-width: 46ch;
+  .p-section.center {
+    justify-content: center;
+    text-align: center;
   }
 
-  .hero-cta {
+  .p-block {
+    max-width: min(640px, 46vw);
     display: flex;
-    gap: var(--space-sm);
-    flex-wrap: wrap;
-    margin-top: var(--space-lg);
+    flex-direction: column;
+    gap: var(--space-md);
   }
 
-  .hero-tags {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: var(--space-lg);
-  }
-
-  .swatches {
-    display: flex;
-    gap: var(--space-sm);
-    flex-wrap: wrap;
-    margin-top: var(--space-lg);
-  }
-
-  .swatch {
-    width: 130px;
-    height: 90px;
-    border-radius: var(--r-md);
-    display: flex;
+  .p-section.right .p-block {
     align-items: flex-end;
-    padding: 12px;
-    font-size: 12px;
+  }
+
+  .p-section.center .p-block {
+    align-items: center;
+  }
+
+  .p-block.wide {
+    max-width: min(900px, 80vw);
+  }
+
+  /* Más aire entre el REFRESKA de partículas y el eyebrow del hero */
+  .hero .p-block {
+    position: relative;
+    top: 10vh;
+    max-width: min(1200px, 88vw);
+  }
+
+  h1 {
+    font-size: clamp(40px, 9.5vw, 150px);
+  }
+
+  h2 {
+    font-size: clamp(30px, 3.8vw, 72px);
+  }
+
+  .p-block .lead {
+    max-width: 44ch;
+  }
+
+  .p-block .lead.small {
+    font-size: 13px;
+    margin-top: var(--space-md);
+  }
+
+  /* meta del hero */
+  .hero-meta {
+    display: flex;
+    gap: 60px;
+    font-size: 13px;
+    color: var(--mute);
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+  }
+
+  .hero-meta b {
+    display: block;
+    color: var(--fg);
     font-family: var(--font-display);
-    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    margin-top: 0;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .p-section.right .tags {
+    justify-content: flex-end;
+  }
+
+  .cta {
+    margin-top: var(--space-sm);
+  }
+
+  /* Indicador de scroll: mouse (óvalo + punto ruedita) y línea animada */
+  .scroll-ind {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: var(--space-md);
+  }
+
+  .mouse {
+    position: relative;
+    width: 26px;
+    height: 42px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 14px;
+    display: block;
+  }
+
+  .mouse i {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 3px;
+    height: 7px;
+    border-radius: 3px;
+    background: var(--c1);
+    transform: translateX(-50%);
+    animation: wheel 1.8s var(--ease-out) infinite;
+  }
+
+  @keyframes wheel {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+    60% {
+      opacity: 0;
+      transform: translate(-50%, 14px);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, 14px);
+    }
+  }
+
+  .cue-line {
+    width: 1px;
+    height: 70px;
+    background: linear-gradient(var(--c1), transparent);
+    animation: cue 2s infinite;
+    display: block;
+  }
+
+  @keyframes cue {
+    0% {
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+    50% {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+    51% {
+      transform-origin: bottom;
+    }
+    100% {
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .p-section,
+    .p-section.right,
+    .p-section.center {
+      justify-content: flex-start;
+      text-align: left;
+      align-items: flex-end;
+      padding-bottom: 18vh;
+    }
+
+    .p-block {
+      max-width: 100%;
+      gap: var(--space-sm);
+    }
+
+    .p-section.right .p-block,
+    .p-section.center .p-block {
+      align-items: flex-start;
+    }
+
+    .p-section.right .tags {
+      justify-content: flex-start;
+    }
+
+    h1 {
+      font-size: 9.5vw;
+    }
+
+    h2 {
+      font-size: 7.6vw;
+    }
+
+    .hero-meta {
+      gap: 18px 32px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta b {
+      font-size: 20px;
+    }
+
+    .scroll-ind {
+      display: none;
+    }
+
+    .hero .p-block {
+      top: 0;
+    }
   }
 </style>

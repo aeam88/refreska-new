@@ -1,0 +1,14 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ args: ['--enable-unsafe-swiftshader'] });
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+await p.goto('http://localhost:4321/dev/lab', { waitUntil: 'networkidle' });
+await p.waitForTimeout(5500);
+await p.evaluate(() => window.scrollTo(0, 0));
+await p.waitForTimeout(4000);
+console.log('A scrollY:', await p.evaluate(() => Math.round(scrollY)), 'hud:', await p.evaluate(() => document.getElementById('hud-num')?.textContent));
+await p.screenshot({ path: 'scripts/shots/zzA-hero.png' });
+await p.evaluate(() => window.scrollTo(0, 3600));
+await p.waitForTimeout(4000);
+console.log('B scrollY:', await p.evaluate(() => Math.round(scrollY)), 'hud:', await p.evaluate(() => document.getElementById('hud-num')?.textContent));
+await p.screenshot({ path: 'scripts/shots/zzB-cta.png' });
+await b.close();

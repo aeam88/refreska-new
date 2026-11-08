@@ -14,10 +14,10 @@
   --mute: #9a94b8;
   --mute-2: #6d6790;
 
-  /* Acentos */
-  --c1: #8b5cff; /* violeta */
-  --c2: #ff3dbf; /* rosa */
-  --c3: #ffd166; /* ámbar */
+  /* Acentos — réplica del gradiente de las partículas */
+  --c1: #2ee6c8; /* turquesa */
+  --c2: #b8f24a; /* lima */
+  --c3: #fff3d6; /* blanco cálido (chispas) */
 
   --grad: linear-gradient(90deg, var(--c1), var(--c2) 65%, var(--c3));
   --grad-btn: linear-gradient(90deg, var(--c1), var(--c2));
@@ -27,8 +27,8 @@
   --line-strong: rgba(255, 255, 255, 0.28);
 
   /* Tipografía */
-  --font-display: 'Syne Variable', 'Syne', system-ui, sans-serif;
-  --font-body: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --font-display: 'Inter Variable', 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   --fs-h1: clamp(36px, 4.8vw, 78px);
   --fs-h2: clamp(30px, 3.6vw, 62px);

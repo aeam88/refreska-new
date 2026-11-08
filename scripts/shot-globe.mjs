@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ args: ['--enable-unsafe-swiftshader'] });
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+await p.goto('http://localhost:4321/dev/lab', { waitUntil: 'networkidle' });
+await p.waitForTimeout(5500);
+await p.evaluate(() => document.querySelectorAll('section')[3].scrollIntoView());
+await p.waitForTimeout(4000);
+await p.screenshot({ path: 'scripts/shots/3-globe.png' });
+await b.close();
+console.log('ok');

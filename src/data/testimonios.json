@@ -1,0 +1,30 @@
+[
+  {
+    "id": "luisa-nicolas",
+    "quote": "Refreska ha sido clave para mostrar nuestro producto! Su capacidad de interpretar nuestras intenciones y su dedicación en cada proyecto se reflejan en resultados certeros. Estudian a fondo cada propuesta, logrando diseños que impulsan las ventas",
+    "name": "Luisa y Nicolas",
+    "role": "Dueños de Bar Mourgues",
+    "avatar": "/assets/img/cliente-luisa-nicolas.webp"
+  },
+  {
+    "id": "daniela-cabrera",
+    "quote": "Trabajar con Refreska ha sido excelente! Sus propuestas de diseño, puntualidad y comunicación ágil nos impresionaron. Buscábamos una imagen atractiva que nos identificara y superaron todas nuestras expectativas. Estamos muy satisfechos.",
+    "name": "Daniela Cabrera",
+    "role": "Jefa de marketing, Navarro & Cía",
+    "avatar": "/assets/img/cliente-daniela.webp"
+  },
+  {
+    "id": "cristobal-fernanda",
+    "quote": "Refreska destaca por su creatividad en el diseño y su flexibilidad con los horarios. Siempre se adaptan a las necesidades del cliente, demostrando un compromiso y versatilidad increíbles. Su enfoque realmente marca la diferencia.",
+    "name": "Cristobal y Fernanda",
+    "role": "Dueños de Sanguchería Petrü",
+    "avatar": "/assets/img/cliente-cristobal-fernanda.webp"
+  },
+  {
+    "id": "rina-mario",
+    "quote": "El compromiso de Refreska es excepcional. Siempre están disponibles para resolver consultas y se adaptan a cambios inesperados y emergencias. Su disposición constante demuestra un genuino interés por sus clientes.",
+    "name": "Rina y Mario",
+    "role": "Cervecería Kvas",
+    "avatar": "/assets/img/cliente-rina-mario.webp"
+  }
+]
