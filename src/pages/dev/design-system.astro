@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Btn from '../../components/ui/Btn.astro';
+import Tag from '../../components/ui/Tag.astro';
+import SectionHeading from '../../components/ui/SectionHeading.astro';
+---
+
+<BaseLayout
+  title="Refreska"
+  description="Estudio de diseño y branding en Chile: identidad visual, packaging y sitios web para empresas en crecimiento."
+>
+  <section class="hero section">
+    <div class="container">
+      <Eyebrow>Estudio de diseño & branding — Chile</Eyebrow>
+
+      <h1>
+        <span class="line"><span>Hacemos <em class="grad-text">Branding</em></span></span>
+        <span class="line"><span>estratégico para empresas</span></span>
+        <span class="line"><span>que están <em class="grad-text">creciendo.</em></span></span>
+      </h1>
+
+      <p class="lead hero-lead">
+        Ordenamos la identidad, el packaging y la web de marcas con ventas
+        reales, para que se vean tan profesionales como su negocio.
+      </p>
+
+      <div class="hero-cta">
+        <Btn href="/contacto#Form">Cuéntanos tu proyecto</Btn>
+        <Btn href="/proyectos" variant="outline">Ver proyectos</Btn>
+      </div>
+
+      <div class="hero-tags">
+        <Tag>Branding</Tag>
+        <Tag>Identidad visual</Tag>
+        <Tag>Packaging</Tag>
+        <Tag>Sitios web</Tag>
+      </div>
+    </div>
+  </section>
+
+  <section class="section demo">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Design system"
+        lines={['Tokens, tipografía|| y componentes.', 'Todo listo para|| construir.']}
+      >
+        <p class="lead">
+          Esta página verifica fuentes (Syne + Inter), tokens de color y los
+          componentes UI base.
+        </p>
+      </SectionHeading>
+
+      <div class="swatches">
+        <div class="swatch" style="background: var(--c1)"><span>--c1</span></div>
+        <div class="swatch" style="background: var(--c2)"><span>--c2</span></div>
+        <div class="swatch" style="background: var(--c3)"><span>--c3</span></div>
+        <div class="swatch" style="background: var(--fg); color: var(--bg)"><span>--fg</span></div>
+        <div class="swatch" style="background: var(--bg-soft); border: 1px solid var(--line)"><span>--bg-soft</span></div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 120px;
+  }
+
+  .hero :global(.eyebrow) {
+    margin-bottom: var(--space-md);
+  }
+
+  .hero-lead {
+    margin-top: var(--space-md);
+    max-width: 46ch;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-top: var(--space-lg);
+  }
+
+  .hero-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: var(--space-lg);
+  }
+
+  .swatches {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-top: var(--space-lg);
+  }
+
+  .swatch {
+    width: 130px;
+    height: 90px;
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: flex-end;
+    padding: 12px;
+    font-size: 12px;
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+</style>

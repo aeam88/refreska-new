@@ -1,0 +1,236 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+type Entry = CollectionEntry<'servicios'> | CollectionEntry<'proyectos'> | CollectionEntry<'paginas'>;
+
+export async function getStaticPaths() {
+  const [servicios, proyectos, paginas] = await Promise.all([
+    getCollection('servicios'),
+    getCollection('proyectos'),
+    getCollection('paginas'),
+  ]);
+
+  const paths: { params: { slug: string }; props: { entry: Entry } }[] = [
+    ...servicios.map((entry) => ({ params: { slug: entry.id }, props: { entry } })),
+    ...proyectos.map((entry) => ({ params: { slug: entry.id }, props: { entry } })),
+    ...paginas.map((entry) => ({ params: { slug: entry.id }, props: { entry } })),
+  ];
+
+  return paths;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const data = entry.data as Record<string, any>;
+
+const title = String(data.title ?? entry.id);
+const description = String(data.metaDescription ?? data.description ?? data.summary ?? '');
+const esProyecto = entry.collection === 'proyectos';
+const esServicio = entry.collection === 'servicios';
+---
+
+<BaseLayout title={title} description={description} image={data.og ?? data.cover?.src}>
+  <article class="section">
+    <div class="container">
+      <header class="head">
+        {
+          esProyecto && (
+            <p class="crumb">
+              {data.client} {data.sector ? `· ${data.sector}` : ''}
+            </p>
+          )
+        }
+        {
+          esServicio && (
+            <p class="crumb">Servicio</p>
+          )
+        }
+        <h1>{title}</h1>
+        {
+          (data.summary || data.lead) && (
+            <p class="lead">{data.summary ?? data.lead}</p>
+          )
+        }
+        {
+          esProyecto && data.services?.length > 0 && (
+            <ul class="tags">
+              {data.services.map((s: string) => <li>{s}</li>)}
+            </ul>
+          )
+        }
+        {
+          esServicio && data.bullets?.length > 0 && (
+            <ul class="bullets">
+              {data.bullets.map((b: string) => <li>{b}</li>)}
+            </ul>
+          )
+        }
+      </header>
+
+      {
+        data.cover && (
+          <img
+            class="cover"
+            src={data.cover.src}
+            alt={data.cover.alt ?? title}
+          />
+        )
+      }
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        data.gallery?.length > 0 && (
+          <div class="gallery">
+            {data.gallery.map((img: any) => (
+              <img src={img.src} alt={img.alt ?? ''} loading="lazy" />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .head {
+    max-width: 900px;
+  }
+
+  .crumb {
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--c1);
+    margin-bottom: var(--space-sm);
+  }
+
+  .head h1 {
+    font-size: clamp(30px, 4.4vw, 64px);
+  }
+
+  .head .lead {
+    margin-top: var(--space-md);
+  }
+
+  .tags,
+  .bullets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: var(--space-md);
+  }
+
+  .tags li {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    padding: 8px 16px;
+    color: var(--mute);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .bullets {
+    flex-direction: column;
+    gap: 12px;
+    list-style: none;
+  }
+
+  .bullets li {
+    color: var(--mute);
+    padding-left: 26px;
+    position: relative;
+  }
+
+  .bullets li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--c2);
+  }
+
+  .cover {
+    width: 100%;
+    max-height: 560px;
+    object-fit: cover;
+    border-radius: var(--r-md);
+    margin-block: var(--space-lg);
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+
+  .gallery img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: var(--r-sm);
+  }
+</style>
+
+<style is:global>
+  .prose {
+    margin-top: var(--space-lg);
+    font-size: 17px;
+    line-height: 1.8;
+    color: #d9d5ea;
+    max-width: 760px;
+  }
+
+  .prose h2 {
+    font-size: clamp(24px, 2.6vw, 36px);
+    margin-top: var(--space-lg);
+    color: var(--fg);
+  }
+
+  .prose h3 {
+    font-size: 22px;
+    margin-top: var(--space-md);
+    color: var(--fg);
+  }
+
+  .prose p {
+    margin-bottom: var(--space-sm);
+    max-width: none;
+  }
+
+  .prose ul,
+  .prose ol {
+    list-style: disc;
+    padding-left: 1.4em;
+    margin-bottom: var(--space-sm);
+    display: grid;
+    gap: 8px;
+  }
+
+  .prose ol {
+    list-style: decimal;
+  }
+
+  .prose a {
+    color: var(--c2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose img {
+    border-radius: var(--r-md);
+    margin-block: var(--space-md);
+    max-width: 100%;
+  }
+
+  .prose blockquote {
+    border-left: 3px solid var(--c1);
+    padding-left: var(--space-sm);
+    color: var(--mute);
+  }
+</style>

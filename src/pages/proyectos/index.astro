@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const proyectos = (await getCollection('proyectos')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout
+  title="Proyectos"
+  description="Casos de branding, packaging y diseño web de Refreska."
+>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow-simple">Proyectos</p>
+      <h1>Marcas que <span class="grad-text">trabajan.</span></h1>
+
+      <ul class="grid">
+        {
+          proyectos.map((p) => (
+            <li>
+              <a href={`/${p.id}`}>
+                <img
+                  src={p.data.cover.src}
+                  alt={p.data.cover.alt ?? p.data.title}
+                  loading="lazy"
+                  width="1024"
+                  height="683"
+                />
+                <div class="meta">
+                  <h2>{p.data.title}</h2>
+                  <p class="muted">{p.data.services.join(' · ')}</p>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .eyebrow-simple {
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--c1);
+    margin-bottom: var(--space-sm);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+  }
+
+  .grid a {
+    display: block;
+  }
+
+  .grid img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: var(--r-md);
+    transition: transform 0.5s var(--ease-out);
+  }
+
+  .grid a:hover img {
+    transform: scale(1.02);
+  }
+
+  .meta {
+    padding-top: var(--space-sm);
+  }
+
+  .meta h2 {
+    font-size: 22px;
+  }
+
+  .meta p {
+    font-size: var(--fs-small);
+    margin-top: 6px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+</style>

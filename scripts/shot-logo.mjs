@@ -1,0 +1,12 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ args: ['--enable-unsafe-swiftshader'] });
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+await p.goto('http://localhost:4321/dev/lab', { waitUntil: 'networkidle' });
+await p.waitForTimeout(5500);
+const tops = await p.evaluate(() => [...document.querySelectorAll('section')].map((s) => Math.round(s.getBoundingClientRect().top + scrollY)));
+await p.evaluate((y) => window.scrollTo(0, y), tops[1]);
+await p.waitForTimeout(4500);
+const hud = await p.evaluate(() => document.getElementById('hud-num')?.textContent);
+await p.screenshot({ path: 'scripts/shots/logo-seccion01-v3.png' });
+console.log('hud:', hud, 'scrollY:', await p.evaluate(() => Math.round(scrollY)));
+await b.close();

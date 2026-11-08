@@ -1,0 +1,116 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = new Date(post.data.date + 'T12:00:00').toLocaleDateString('es-CL', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} type="article">
+  <article class="section">
+    <div class="container article">
+      <header class="article-head">
+        <p class="muted">{fmt} · {post.data.readingTime}</p>
+        <h1>{post.data.title}</h1>
+        <p class="lead">{post.data.description}</p>
+      </header>
+
+      <img
+        class="article-cover"
+        src={post.data.cover.src}
+        alt={post.data.cover.alt ?? post.data.title}
+      />
+
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style is:global>
+  .article {
+    max-width: 860px;
+  }
+
+  .article-head h1 {
+    font-size: clamp(30px, 4vw, 56px);
+    margin-block: var(--space-sm);
+  }
+
+  .article-cover {
+    width: 100%;
+    border-radius: var(--r-md);
+    margin-block: var(--space-lg);
+  }
+
+  .prose {
+    margin-top: var(--space-lg);
+    font-size: 17px;
+    line-height: 1.8;
+    color: #d9d5ea;
+  }
+
+  .prose h2 {
+    font-size: clamp(24px, 2.6vw, 36px);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+    color: var(--fg);
+  }
+
+  .prose h3 {
+    font-size: 22px;
+    margin-top: var(--space-md);
+    color: var(--fg);
+  }
+
+  .prose p {
+    margin-bottom: var(--space-sm);
+    max-width: none;
+  }
+
+  .prose ul,
+  .prose ol {
+    list-style: disc;
+    padding-left: 1.4em;
+    margin-bottom: var(--space-sm);
+    display: grid;
+    gap: 8px;
+  }
+
+  .prose ol {
+    list-style: decimal;
+  }
+
+  .prose a {
+    color: var(--c2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose img {
+    border-radius: var(--r-md);
+    margin-block: var(--space-md);
+  }
+
+  .prose blockquote {
+    border-left: 3px solid var(--c1);
+    padding-left: var(--space-sm);
+    color: var(--mute);
+    margin-block: var(--space-md);
+  }
+</style>
