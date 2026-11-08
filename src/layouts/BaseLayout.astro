@@ -1,0 +1,55 @@
+---
+import '@fontsource-variable/syne';
+import '@fontsource-variable/inter';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/typography.css';
+
+import SEO from '../components/layout/SEO.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import Grain from '../components/layout/Grain.astro';
+import Vignette from '../components/layout/Vignette.astro';
+import Cursor from '../components/layout/Cursor.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  hideFooter?: boolean;
+}
+
+const { title, description, image, type, noindex, hideFooter = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#06050c" />
+    <SEO {title} {description} {image} {type} {noindex} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+
+    <!-- Capas de ambiente (canvas WebGL se agrega en Fase 2) -->
+    <Vignette />
+    <Grain />
+
+    <Header />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    {!hideFooter && <Footer />}
+
+    <Cursor />
+  </body>
+</html>

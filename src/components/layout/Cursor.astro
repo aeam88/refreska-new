@@ -1,0 +1,101 @@
+---
+// Cursor custom (solo desktop, se desactiva con prefers-reduced-motion)
+---
+
+<div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+
+<script>
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(pointer: fine)').matches;
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+
+  if (!reduced && fine && dot && ring) {
+    let x = -100, y = -100; // destino del punto
+    let rx = -100, ry = -100; // destino del anillo (lerp)
+    let cx = -100, cy = -100;
+
+    addEventListener('pointermove', (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      dot.style.opacity = '1';
+      ring.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseleave', () => {
+      dot.style.opacity = '0';
+      ring.style.opacity = '0';
+    });
+
+    // Anillo agrandado sobre enlaces/botones
+    document.querySelectorAll('a, button, [data-cursor="big"]').forEach((el) => {
+      el.addEventListener('mouseenter', () => ring.classList.add('is-big'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('is-big'));
+    });
+
+    const loop = () => {
+      rx += (x - rx) * 0.16;
+      ry += (y - ry) * 0.16;
+      cx += (x - cx) * 0.9;
+      cy += (y - cy) * 0.9;
+      dot.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+      ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+      requestAnimationFrame(loop);
+    };
+    loop();
+    document.documentElement.classList.add('has-custom-cursor');
+  }
+</script>
+
+<style>
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--z-cursor);
+    pointer-events: none;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .cursor-dot {
+    width: 7px;
+    height: 7px;
+    background: #fff;
+    mix-blend-mode: difference;
+  }
+
+  .cursor-ring {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition:
+      width 0.3s var(--ease-out),
+      height 0.3s var(--ease-out),
+      background 0.3s var(--ease-out),
+      opacity 0.3s;
+  }
+
+  .cursor-ring.is-big {
+    width: 84px;
+    height: 84px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Solo desktop con puntero fino y sin reduced-motion */
+  @media (pointer: coarse), (prefers-reduced-motion: reduce) {
+    .cursor-dot,
+    .cursor-ring {
+      display: none;
+    }
+  }
+
+  :global(.has-custom-cursor) body,
+  :global(.has-custom-cursor) a,
+  :global(.has-custom-cursor) button {
+    cursor: none;
+  }
+</style>

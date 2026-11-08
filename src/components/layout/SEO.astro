@@ -1,0 +1,60 @@
+---
+// SEO head compartido: title, description, canonical, OG, Twitter, JSON-LD
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  image = '/og/default.webp',
+  type = 'website',
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const ogImage = new URL(image, Astro.site ?? Astro.url.origin).href;
+const fullTitle = title === 'Refreska' ? title : `${title} | Refreska`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'Refreska',
+  url: 'https://www.refreska.cl',
+  logo: 'https://www.refreska.cl/assets/img/logo-refreska.webp',
+  description:
+    'Estudio de diseño y branding en Chile: identidad visual, packaging y sitios web para empresas en crecimiento.',
+  foundingDate: '2016',
+  areaServed: 'CL',
+  sameAs: [
+    'https://www.instagram.com/refreska.cl',
+    'https://www.behance.net/refreska',
+    'https://www.linkedin.com/company/refreska/',
+    'https://www.facebook.com/refreska.cl',
+  ],
+};
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content="Refreska" />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:locale" content="es_CL" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

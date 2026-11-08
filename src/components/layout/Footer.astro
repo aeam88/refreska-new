@@ -1,0 +1,179 @@
+---
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: 'Proyectos',
+    links: [
+      { href: '/madcharlie', label: 'Mad Charlies' },
+      { href: '/bloombox', label: 'Bloom Box' },
+      { href: '/merken-street-food', label: 'Merken Street Food' },
+      { href: '/x-analytic', label: 'X-Analytic' },
+      { href: '/avianti', label: 'Avianti' },
+      { href: '/check360', label: 'Check360' },
+      { href: '/proyectos', label: 'Ver todos' },
+    ],
+  },
+  {
+    title: 'Servicios',
+    links: [
+      { href: '/branding', label: 'Branding' },
+      { href: '/diseno', label: 'Diseño' },
+      { href: '/packaging', label: 'Packaging' },
+      { href: '/digital', label: 'Sitios web' },
+      { href: '/cervecero', label: 'Cervecero' },
+      { href: '/diseno-para-restaurantes', label: 'Restaurantes' },
+    ],
+  },
+  {
+    title: 'Recursos',
+    links: [
+      { href: '/blog', label: 'Blog' },
+      { href: '/sobre-refreska', label: 'Sobre Refreska' },
+      { href: '/contacto', label: 'Contacto' },
+      { href: '/privacidad', label: 'Política de privacidad' },
+    ],
+  },
+];
+
+const socials = [
+  { href: 'https://www.instagram.com/refreska.cl', label: 'Instagram', icon: 'ig' },
+  { href: 'https://www.behance.net/refreska', label: 'Behance', icon: 'be' },
+  { href: 'https://www.linkedin.com/company/refreska/', label: 'LinkedIn', icon: 'in' },
+  { href: 'https://www.facebook.com/refreska.cl', label: 'Facebook', icon: 'fb' },
+  { href: 'https://www.tiktok.com/@refreska', label: 'TikTok', icon: 'tt' },
+];
+---
+
+<footer class="site-footer section">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="logo">refreska<span class="grad-text">.</span></a>
+      <p class="lead">
+        Estudio de branding y diseño en Chile. Marcas con personalidad y
+        coherencia para negocios en crecimiento.
+      </p>
+      <div class="socials">
+        {socials.map((s) => (
+          <a
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={s.label}
+          >
+            {s.label}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    {columns.map((col) => (
+      <div class="footer-col">
+        <p class="footer-title">{col.title}</p>
+        <ul>
+          {col.links.map((l) => (
+            <li><a href={l.href}>{l.label}</a></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div class="container footer-bottom">
+    <p>© {year} Refreska SpA. Todos los derechos reservados.</p>
+    <p>Santiago, Chile</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, transparent, rgba(139, 92, 255, 0.05));
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    display: inline-block;
+    margin-bottom: var(--space-sm);
+  }
+
+  .footer-brand .lead {
+    font-size: 15px;
+    max-width: 34ch;
+  }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: var(--space-md);
+    font-size: var(--fs-small);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+
+  .socials a:hover {
+    color: var(--fg);
+  }
+
+  .footer-title {
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--c1);
+    margin-bottom: var(--space-sm);
+  }
+
+  .footer-col ul {
+    display: grid;
+    gap: 10px;
+  }
+
+  .footer-col a {
+    color: var(--mute);
+    font-size: 15px;
+    transition: color 0.25s;
+  }
+
+  .footer-col a:hover {
+    color: var(--fg);
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-small);
+    color: var(--mute-2);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

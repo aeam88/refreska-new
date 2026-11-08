@@ -1,0 +1,63 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import LineReveal from './LineReveal.astro';
+
+interface Props {
+  eyebrow?: string;
+  lines: string[]; // una entrada por línea; usa "||" para marcar la parte con degradado
+  align?: 'left' | 'center' | 'right';
+  as?: 'h2' | 'h3';
+  class?: string;
+}
+
+const {
+  eyebrow,
+  lines,
+  align = 'left',
+  as = 'h2',
+  class: className = '',
+} = Astro.props;
+---
+
+<div class:list={['section-heading', `is-${align}`, className]}>
+  {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+  <div class="heading-lines">
+    {lines.map((line) => {
+      const [plain, accent] = line.split('||');
+      return (
+        <LineReveal as={as}>
+          {plain}
+          {accent && <span class="grad-text">{accent}</span>}
+        </LineReveal>
+      );
+    })}
+  </div>
+  <div class="heading-slot"><slot /></div>
+</div>
+
+<style>
+  .section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .is-center {
+    align-items: center;
+    text-align: center;
+  }
+
+  .is-right {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .heading-lines {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .heading-slot:empty {
+    display: none;
+  }
+</style>

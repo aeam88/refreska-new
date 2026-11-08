@@ -1,0 +1,19 @@
+---
+// Viñeta radial: da contraste al texto sobre el canvas
+---
+
+<div class="vignette" aria-hidden="true"></div>
+
+<style>
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-vignette);
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 42%,
+      rgba(4, 3, 9, 0.78) 100%
+    );
+  }
+</style>

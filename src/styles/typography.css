@@ -1,0 +1,53 @@
+/* Tipografía display — líneas con reveal (overflow hidden) */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-tight);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--fs-h1);
+}
+
+h2 {
+  font-size: var(--fs-h2);
+}
+
+h3 {
+  font-size: var(--fs-h3);
+}
+
+p {
+  max-width: var(--measure);
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.68;
+  color: var(--mute);
+  font-weight: 300;
+}
+
+/* Bloque de línea animable (GSAP mueve el span interno) */
+.line {
+  display: block;
+  overflow: hidden;
+  padding: 0.04em 0.06em 0.1em;
+  margin: 0 -0.06em;
+}
+
+.line > span {
+  display: inline-block;
+  will-change: transform;
+}
+
+@media (max-width: 760px) {
+  .line {
+    overflow: visible;
+  }
+}

@@ -1,0 +1,84 @@
+/* ===========================================================
+   Design tokens — Refreska
+   Paleta oscura derivada de la identidad actual (violeta/rosa)
+   + acento ámbar. Ajustar aquí = ajustar todo el sitio.
+   =========================================================== */
+:root {
+  /* Superficies */
+  --bg: #06050c;
+  --bg-soft: #0c0a17;
+  --bg-card: rgba(255, 255, 255, 0.03);
+
+  /* Texto */
+  --fg: #f2effb;
+  --mute: #9a94b8;
+  --mute-2: #6d6790;
+
+  /* Acentos */
+  --c1: #8b5cff; /* violeta */
+  --c2: #ff3dbf; /* rosa */
+  --c3: #ffd166; /* ámbar */
+
+  --grad: linear-gradient(90deg, var(--c1), var(--c2) 65%, var(--c3));
+  --grad-btn: linear-gradient(90deg, var(--c1), var(--c2));
+
+  /* Líneas y bordes */
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.28);
+
+  /* Tipografía */
+  --font-display: 'Syne Variable', 'Syne', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, sans-serif;
+
+  --fs-h1: clamp(36px, 4.8vw, 78px);
+  --fs-h2: clamp(30px, 3.6vw, 62px);
+  --fs-h3: clamp(24px, 2.6vw, 42px);
+  --fs-lead: clamp(16px, 1.25vw, 19px);
+  --fs-body: 16px;
+  --fs-small: 13px;
+  --fs-eyebrow: 12px;
+
+  --lh-tight: 0.94;
+  --lh-body: 1.65;
+
+  --ls-tight: -0.035em;
+  --ls-eyebrow: 0.3em;
+
+  /* Espaciado */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 28px;
+  --space-lg: 56px;
+  --space-xl: clamp(72px, 12vh, 140px);
+  --pad-x: clamp(20px, 6vw, 96px);
+  --section-y: clamp(88px, 14vh, 180px);
+
+  --container: 1400px;
+  --measure: 62ch;
+
+  /* Radios */
+  --r-sm: 10px;
+  --r-md: 20px;
+  --r-pill: 999px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 0.45s;
+
+  /* Capas */
+  --z-canvas: 0;
+  --z-vignette: 1;
+  --z-grain: 2;
+  --z-main: 5;
+  --z-nav: 20;
+  --z-cursor: 100;
+  --z-loader: 200;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --fs-h1: 8.5vw;
+    --fs-h2: 7.5vw;
+  }
+}

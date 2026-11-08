@@ -1,0 +1,113 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'grad' | 'outline' | 'ghost';
+  class?: string;
+  type?: 'button' | 'submit';
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'grad',
+  class: className = '',
+  type = 'button',
+  ...rest
+} = Astro.props;
+
+const cls = list(['btn', `btn--${variant}`, className]);
+
+function list(arr: (string | false | undefined)[]) {
+  return arr.filter(Boolean).join(' ');
+}
+---
+
+{
+  href ? (
+    <a href={href} class={cls} {...rest}>
+      <slot />
+      <span class="btn-arrow" aria-hidden="true">→</span>
+    </a>
+  ) : (
+    <button type={type} class={cls} {...rest}>
+      <slot />
+      <span class="btn-arrow" aria-hidden="true">→</span>
+    </button>
+  )
+}
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 19px 38px;
+    border-radius: var(--r-pill);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform 0.35s var(--ease-out),
+      background 0.35s var(--ease-out),
+      border-color 0.35s var(--ease-out),
+      color 0.35s var(--ease-out);
+  }
+
+  .btn--grad {
+    background: var(--grad-btn);
+    color: #07060d;
+  }
+
+  .btn--grad:hover {
+    transform: scale(1.045);
+  }
+
+  .btn--outline {
+    border: 1px solid var(--line-strong);
+    color: var(--fg);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(8px);
+  }
+
+  .btn--outline:hover {
+    background: var(--fg);
+    color: var(--bg);
+    transform: scale(1.03);
+  }
+
+  .btn--ghost {
+    color: var(--fg);
+    padding: 10px 0;
+  }
+
+  .btn--ghost:hover {
+    color: var(--c2);
+  }
+
+  .btn--ghost .btn-arrow {
+    display: none;
+  }
+
+  .btn-arrow {
+    transition: transform 0.35s var(--ease-out);
+    font-style: normal;
+  }
+
+  .btn:hover .btn-arrow {
+    transform: translateX(6px) rotate(-45deg);
+  }
+
+  .btn--ghost:hover .btn-arrow {
+    transform: translateX(6px);
+  }
+
+  @media (max-width: 760px) {
+    .btn {
+      padding: 16px 30px;
+      font-size: 15px;
+    }
+  }
+</style>
