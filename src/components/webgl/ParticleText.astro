@@ -1,0 +1,324 @@
+---
+/**
+ * Texto de partículas que vive en el flujo (para reemplazar una imagen).
+ * Usa los mismos shaders que el canvas de la home: entrada desde la nube,
+ * sway, repulsión por mouse y burst al click.
+ *
+ * El ancho del texto = el de las partículas REFRESKA de la home (o el 96%
+ * del contenedor, lo que sea menor). Sin WebGL o con reduced-motion queda
+ * el texto plano, con el mismo tamaño (--pt-em lo setea el script).
+ */
+interface Props {
+  text?: string;
+}
+const { text = 'diseño & branding' } = Astro.props;
+---
+
+<div
+  class="pt"
+  data-particle-text
+  data-text={text}
+  role="img"
+  aria-label={text}
+>
+  <canvas aria-hidden="true"></canvas>
+  <span class="pt-static">{text}</span>
+</div>
+
+<style>
+  .pt {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: clamp(160px, 17vw, 250px);
+    margin-block: var(--space-lg);
+    overflow: hidden;
+    border-radius: var(--r-md);
+  }
+
+  .pt canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Texto plano: se ve mientras no hay WebGL y sirve de fallback */
+  .pt-static {
+    position: relative;
+    max-width: 100%;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--pt-em, clamp(26px, 6.6vw, 92px));
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-align: center;
+    text-wrap: balance;
+    color: var(--fg);
+    padding-inline: 6px;
+  }
+
+  .pt.is-gl .pt-static {
+    visibility: hidden;
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+  import gsap from 'gsap';
+  import { fitTextShape, scatterShape } from '../../scripts/webgl/shapes';
+  import { vertexShader, fragmentShader } from '../../scripts/webgl/shaders';
+
+  const TAN_HALF = Math.tan((45 / 2) * (Math.PI / 180));
+  const CAM_Z = 11;
+  /** alto del mundo visible en z=0 (fov 45°, cámara en CAM_Z) */
+  const WORLD_H = 2 * TAN_HALF * CAM_Z;
+  const HOME_W = 10; // ancho de la forma REFRESKA en la home
+
+  const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /** Ancho en px que ocupan las partículas REFRESKA de la home */
+  function refreskaPx(fill: number) {
+    const vw = innerWidth;
+    const vh = innerHeight;
+    const z = vw / vh < 1 ? 17 : 11; // misma regla que scene.ts
+    const mobile = matchMedia('(max-width: 760px)').matches;
+    const world = mobile ? 6.8 * 0.72 : HOME_W; // + points.scale(.72) en móvil
+    return (world * fill * vh) / (2 * TAN_HALF * z);
+  }
+
+  document
+    .querySelectorAll<HTMLElement>('[data-particle-text]')
+    .forEach((wrap) => setup(wrap));
+
+  function setup(wrap: HTMLElement) {
+    const canvas = wrap.querySelector<HTMLCanvasElement>('canvas');
+    const text = wrap.dataset.text?.trim();
+    if (!canvas || !text) return;
+
+    // el raster depende de la fuente: esperamos (máx. 2.5s)
+    (async () => {
+      try {
+        await Promise.race([
+          document.fonts.load('800 100px "Inter Variable"'),
+          new Promise((r) => setTimeout(r, 2500)),
+        ]);
+        await document.fonts.ready;
+      } catch {
+        /* sin fuentes: se usa la por defecto */
+      }
+      build(text, canvas);
+    })();
+
+    function build(str: string, cv: HTMLCanvasElement) {
+      const mobile = matchMedia('(max-width: 760px)').matches;
+      const coarse = matchMedia('(pointer: coarse)').matches;
+      const PR = Math.min(devicePixelRatio, 2);
+
+      const home = fitTextShape('REFRESKA', HOME_W, 1);
+      const probe = fitTextShape(str, HOME_W, 1); // solo métricas: ratio/fill
+      // sin raster no hay nada que armar: queda el texto plano
+      if (!home.fill || !probe.ratio) return;
+
+      const ratio = probe.ratio;
+      const targetW = () =>
+        Math.min(refreskaPx(home.fill), wrap.clientWidth * 0.96);
+
+      // densidad constante por superficie de texto: el mismo texto en un
+      // bloque chico no debe saturar en blanco (additive blending)
+      const N = Math.round(clamp(targetW() * (targetW() * ratio) * 0.172, 1500, 16000));
+      const base = fitTextShape(str, HOME_W, N).points;
+
+      /** Alto del bloque y tamaño del texto plano según el ancho objetivo */
+      const applySize = () => {
+        const emPx = targetW() * ratio;
+        const h = Math.round(clamp(emPx * 2.4, 140, 300));
+        if (Math.abs(h - wrap.clientHeight) > 1) wrap.style.height = `${h}px`;
+        wrap.style.setProperty('--pt-em', `${emPx.toFixed(1)}px`);
+        return emPx;
+      };
+
+      // reduced-motion: mismo tamaño que tendrían las partículas, sin WebGL
+      if (reduced) {
+        applySize();
+        return;
+      }
+
+      let renderer: THREE.WebGLRenderer;
+      try {
+        renderer = new THREE.WebGLRenderer({
+          canvas: cv,
+          alpha: true,
+          antialias: false,
+          powerPreference: 'high-performance',
+        });
+      } catch {
+        return; // sin WebGL: se ve el texto plano
+      }
+      renderer.setPixelRatio(PR);
+      renderer.setClearColor(0x000000, 0);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+      camera.position.set(0, 0, CAM_Z);
+
+      const U = {
+        uProg: { value: 0 },
+        uTime: { value: 0 },
+        uSize: { value: mobile ? 5.4 : 4.8 },
+        uPR: { value: PR },
+        uMouse: { value: new THREE.Vector3(99, 99, 0) },
+        uBurst: { value: 0 },
+        uIntro: { value: 0 },
+        uMS: { value: 1 },
+        uSpan: { value: HOME_W / 2 },
+      };
+
+      const material = new THREE.ShaderMaterial({
+        uniforms: U,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexShader,
+        fragmentShader,
+      });
+
+      // p0 = texto; p1…p4 no se usan (uProg queda en 0) pero el shader las pide
+      const zeros = new Float32Array(N * 3);
+      const p0 = base.slice();
+      const geo = new THREE.BufferGeometry();
+      for (let i = 0; i < 5; i++) {
+        geo.setAttribute(`p${i}`, new THREE.BufferAttribute(i === 0 ? p0 : zeros, 3));
+      }
+      geo.setAttribute('position', new THREE.BufferAttribute(p0, 3));
+      geo.setAttribute('pS', new THREE.BufferAttribute(scatterShape(N), 3));
+      const rand = new Float32Array(N);
+      for (let i = 0; i < N; i++) rand[i] = Math.random();
+      geo.setAttribute('aRand', new THREE.BufferAttribute(rand, 1));
+
+      const cloud = new THREE.Points(geo, material);
+      cloud.frustumCulled = false; // position se reescala en cada resize
+      scene.add(cloud);
+
+      /** Reencaja: alto del bloque, tamaño del renderer y escala del texto */
+      const fit = () => {
+        const w = wrap.clientWidth;
+        if (w < 40) return;
+        const emPx = applySize();
+        const h = wrap.clientHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+
+        // el punto se mantiene ~4px donde la home los usa y baja en textos
+        // chicos (si no, las letras quedan lavadas)
+        U.uSize.value = clamp(4.8 * (emPx / 100), 2.2, 4.8);
+
+        const worldW = (targetW() * WORLD_H) / h;
+        const k = worldW / HOME_W;
+        // x e y escalan con el ancho; z se acota para que la perspectiva
+        // difumine ~5px en el borde (Δ ≈ anchoPx · z / 22), proporcional a lo
+        // que se ve en la home con letras del doble de alto
+        const zAmp = clamp(110 / targetW(), 0.05, 1);
+        for (let i = 0; i < p0.length; i += 3) {
+          p0[i] = base[i] * k;
+          p0[i + 1] = base[i + 1] * k;
+          p0[i + 2] = base[i + 2] * zAmp;
+        }
+        geo.getAttribute('p0').needsUpdate = true;
+        geo.getAttribute('position').needsUpdate = true;
+        U.uSpan.value = worldW / 2;
+      };
+
+      // ---- interacción ----
+      const ndc = new THREE.Vector2();
+      const mouseTarget = new THREE.Vector3(99, 99, 0);
+      const ray = new THREE.Raycaster();
+      const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+      const onMove = (e: PointerEvent) => {
+        if (coarse) return;
+        const r = wrap.getBoundingClientRect();
+        ndc.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+        ndc.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+        ray.setFromCamera(ndc, camera);
+        ray.ray.intersectPlane(plane, mouseTarget);
+      };
+      const onLeave = () => mouseTarget.set(99, 99, 0);
+
+      wrap.addEventListener('pointermove', onMove);
+      wrap.addEventListener('pointerleave', onLeave);
+      wrap.addEventListener('click', () =>
+        gsap.fromTo(
+          U.uBurst,
+          { value: 0 },
+          {
+            value: 1.4,
+            duration: 0.35,
+            ease: 'power3.out',
+            onComplete: () =>
+              gsap.to(U.uBurst, { value: 0, duration: 1.6, ease: 'elastic.out(1, .4)' }),
+          }
+        )
+      );
+
+      // ---- loop: solo a la vista y con la pestaña activa ----
+      let raf = 0;
+      let running = false;
+      let inView = false;
+      let last = performance.now();
+
+      const loop = () => {
+        if (!running) return;
+        raf = requestAnimationFrame(loop);
+        const now = performance.now();
+        const dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        U.uTime.value += dt;
+        U.uMouse.value.lerp(mouseTarget, 0.12);
+        renderer.render(scene, camera);
+      };
+
+      const sync = () => {
+        const next = inView && !document.hidden;
+        if (next === running) return;
+        running = next;
+        if (running) {
+          last = performance.now();
+          raf = requestAnimationFrame(loop);
+        } else {
+          cancelAnimationFrame(raf);
+        }
+      };
+
+      let intro = false;
+      const io = new IntersectionObserver(
+        (entries) => {
+          inView = entries[0]?.isIntersecting ?? false;
+          if (inView && !intro) {
+            intro = true;
+            gsap.to(U.uIntro, { value: 1, duration: 1.9, ease: 'power2.out' });
+          }
+          sync();
+        },
+        { threshold: 0.2 }
+      );
+      io.observe(wrap);
+      document.addEventListener('visibilitychange', sync);
+
+      let rt = 0;
+      const ro = new ResizeObserver(() => {
+        clearTimeout(rt);
+        rt = window.setTimeout(fit, 120);
+      });
+      ro.observe(wrap);
+
+      fit();
+      wrap.classList.add('is-gl');
+      sync();
+    }
+  }
+</script>
