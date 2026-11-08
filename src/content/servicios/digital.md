@@ -17,10 +17,6 @@ metaTitle: "Diseño web para empresas en Chile | Refreska"
 metaDescription: "Diseño de sitios web para empresas en Chile. Presenta tus servicios, muestra tu experiencia y facilita el contacto con tus clientes. Conoce Refreska."
 ---
 
-# Diseño de sitios web para empresas en crecimiento
-
-Diseñamos sitios web alineados con tu marca, que presentan tus servicios con claridad y facilitan que tus clientes te contacten.
-
 [Cuéntanos tu proyecto web](#Form)
 
 **Qué hacemos y para quién**

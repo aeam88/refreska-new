@@ -20,10 +20,6 @@ metaTitle: "Diseño de Packaging y Etiquetas en Chile | Refreska"
 metaDescription: "Diseñamos packaging y etiquetas para marcas chilenas: cajas, envases, bolsas, vasos y stickers con identidad de marca y archivos listos para imprenta."
 ---
 
-# Packaging y etiquetas pensados para el punto de venta
-
-Diseñamos el packaging y las etiquetas de tu producto como parte de su identidad de marca, del concepto al archivo listo para imprenta.
-
 [Cuéntanos tu proyecto](#Form)
 
 **Qué hacemos y para quién**

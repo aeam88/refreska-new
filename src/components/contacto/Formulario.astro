@@ -1,0 +1,445 @@
+---
+/**
+ * Formulario de contacto — UI (Fase 4). El backend es Fase 6
+ * (`POST /api/contacto`): hasta entonces el envío muestra el estado de error.
+ *
+ * Estructura, copy y placeholders replican el formulario original del sitio.
+ * Los selects leen sus opciones de `sitio.json` (formOptions).
+ */
+import { getCollection } from 'astro:content';
+import Btn from '../ui/Btn.astro';
+
+const [sitio] = await getCollection('sitio');
+const formOptions = sitio?.data.formOptions ?? {
+  plazo: [],
+  etapa: [],
+  necesidad: [],
+  presupuesto: [],
+};
+
+/** Fila de 2 columnas; en móvil baja a 1 (ver estilos) */
+const selects = [
+  { id: 'plazo', label: '¿Cuándo te gustaría comenzar?', options: formOptions.plazo },
+  { id: 'etapa', label: '¿En qué etapa está tu negocio?', options: formOptions.etapa },
+  { id: 'necesidad', label: '¿Qué necesitas principalmente?', options: formOptions.necesidad },
+  { id: 'presupuesto', label: '¿Presupuesto estimado? (sin IVA)', options: formOptions.presupuesto },
+] as const;
+
+const select = (id: (typeof selects)[number]['id']) =>
+  selects.find((s) => s.id === id)!;
+---
+
+<!-- id="Form": ancla de todos los CTA (/contacto#Form); vive en el wrap para
+     seguir visible cuando el form se reemplaza por el estado de éxito -->
+<div class="form-wrap" id="Form">
+  <form class="form" action="/api/contacto" method="post" data-form-contacto>
+    <div class="row">
+      <div class="field">
+        <label for="nombre">Nombre y apellido</label>
+        <input
+          id="nombre"
+          name="nombre"
+          type="text"
+          maxlength="256"
+          placeholder="Brad Pitt"
+          autocomplete="name"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="marca">Marca, Instagram o web</label>
+        <input
+          id="marca"
+          name="marca"
+          type="text"
+          maxlength="256"
+          placeholder="Nombre, @marca o tusitio.cl"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="whatsapp">WhatsApp o Teléfono</label>
+        <input
+          id="whatsapp"
+          name="whatsapp"
+          type="tel"
+          maxlength="256"
+          placeholder="+569"
+          autocomplete="tel"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="email">Correo electrónico</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          maxlength="256"
+          placeholder="tu@email.cl"
+          autocomplete="email"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="plazo">{select('plazo').label}</label>
+        <select id="plazo" name="plazo" required>
+          <option value="" disabled selected>Selecciona una opción</option>
+          {select('plazo').options.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="rut"
+          >RUT empresa o razón social <span class="opt">(opcional)</span></label
+        >
+        <input
+          id="rut"
+          name="rut"
+          type="text"
+          maxlength="256"
+          placeholder="Ej: 76.XXX.XXX-X o Nombre Empresa SpA"
+        />
+      </div>
+      <div class="field">
+        <label for="etapa">{select('etapa').label}</label>
+        <select id="etapa" name="etapa" required>
+          <option value="" disabled selected>Selecciona una opción</option>
+          {select('etapa').options.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="necesidad">{select('necesidad').label}</label>
+        <select id="necesidad" name="necesidad" required>
+          <option value="" disabled selected>Selecciona una opción</option>
+          {select('necesidad').options.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </div>
+      <div class="field">
+        <label for="presupuesto">{select('presupuesto').label}</label>
+        <select id="presupuesto" name="presupuesto" required>
+          <option value="" disabled selected>Selecciona una opción</option>
+          {select('presupuesto').options.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </div>
+    </div>
+
+    <div class="field field--area">
+      <label for="mensaje">Cuéntanos qué necesitas resolver</label>
+      <textarea
+        id="mensaje"
+        name="mensaje"
+        maxlength="5000"
+        placeholder="Mientras más contexto nos compartas, mejor podremos ayudarte."
+        required></textarea>
+    </div>
+
+    <p class="aviso">
+      Al enviar, autorizas a Refreska SpA a usar estos datos para responder tu
+      solicitud, lo que incluye analizarlos con inteligencia artificial de
+      proveedores externos y enviarte un acuse de recibo automático. Más
+      información en la <a href="/privacidad">Política de Privacidad</a>.
+    </p>
+
+    <!-- Honeypot anti-spam: oculto para personas, visible para bots -->
+    <div class="hp" aria-hidden="true">
+      <label for="rfk-website">No completar este campo</label>
+      <input type="text" id="rfk-website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="actions">
+      <Btn type="submit" class="submit"
+        ><span class="btn-label">Enviar solicitud</span></Btn
+      >
+    </div>
+  </form>
+
+  <div class="done" data-done hidden tabindex="-1" role="status">
+    <strong>Nos pondremos en contacto contigo!</strong>
+    <strong class="done-small">Gracias por tu tiempo. ✌🏼</strong>
+  </div>
+
+  <div class="fail" data-fail hidden tabindex="-1" role="alert">
+    <p class="fail-title">No pudimos enviar tu solicitud.</p>
+    <p class="fail-text">
+      Tu información sigue en el formulario: presiona «Reintentar».
+    </p>
+    <button type="button" class="retry">Reintentar</button>
+  </div>
+</div>
+
+<script>
+  /**
+   * Envío del formulario (fetch) con estados: enviando → éxito / error.
+   * El endpoint llega en Fase 6; mientras tanto cualquier respuesta
+   * distinta de 2xx muestra el estado de error, conservando lo escrito.
+   */
+  document.querySelectorAll<HTMLFormElement>('form[data-form-contacto]').forEach((form) => {
+    const wrap = form.parentElement;
+    if (!wrap) return;
+    const done = wrap.querySelector<HTMLElement>('[data-done]');
+    const fail = wrap.querySelector<HTMLElement>('[data-fail]');
+    const retry = fail?.querySelector<HTMLButtonElement>('button');
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const label = submit?.querySelector<HTMLElement>('.btn-label');
+    if (!done || !fail || !retry || !submit || !label) return;
+
+    let sending = false;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (sending) return;
+      sending = true;
+      fail.hidden = true;
+      submit.disabled = true;
+      label.textContent = 'Enviando…';
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.hidden = true;
+        done.hidden = false;
+        done.focus();
+      } catch {
+        fail.hidden = false;
+        fail.focus();
+      } finally {
+        sending = false;
+        submit.disabled = false;
+        label.textContent = 'Enviar solicitud';
+      }
+    });
+
+    retry.addEventListener('click', () => {
+      fail.hidden = true;
+      form.requestSubmit();
+    });
+  });
+</script>
+
+<style>
+  .form-wrap {
+    position: relative;
+    margin-top: clamp(28px, 3vw, 44px);
+    /* el ancla /contacto#Form no debe quedar bajo el header fijo */
+    scroll-margin-top: 120px;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  /* [hidden] debe ganarle a los display:flex de estos bloques */
+  .form[hidden],
+  .done[hidden],
+  .fail[hidden] {
+    display: none;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .field label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
+
+  .field .opt {
+    color: var(--mute);
+    font-weight: 400;
+  }
+
+  .field :is(input, select, textarea) {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 15px 18px;
+    color: var(--fg);
+    font-size: 15px;
+    transition:
+      border-color 0.3s var(--ease-out),
+      background-color 0.3s var(--ease-out);
+  }
+
+  .field :is(input, textarea)::placeholder {
+    color: var(--mute-2);
+  }
+
+  .field :is(input, select, textarea):focus {
+    border-color: var(--c1);
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .field select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    padding-right: 46px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%239a94b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+  }
+
+  /* opción aún no elegida: mismo tono que un placeholder */
+  .field select:invalid {
+    color: var(--mute-2);
+  }
+
+  .field select option {
+    background: var(--bg-soft);
+    color: var(--fg);
+  }
+
+  .field--area textarea {
+    min-height: 150px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  .aviso {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--mute);
+    margin-top: 6px;
+    max-width: 62ch;
+  }
+
+  .aviso a {
+    color: var(--c2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* honeypot: fuera de pantalla, no interactivo */
+  .hp {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: 4px;
+  }
+
+  .actions :global(.btn):disabled {
+    opacity: 0.65;
+    cursor: progress;
+    transform: none;
+  }
+
+  /* ---- estados ---- */
+  .done {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    padding: clamp(30px, 4vw, 52px) clamp(20px, 3vw, 40px);
+    background: rgba(46, 230, 200, 0.07);
+    border: 1px solid rgba(46, 230, 200, 0.32);
+    border-radius: var(--r-md);
+  }
+
+  .done strong {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(19px, 1.9vw, 26px);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+
+  .done .done-small {
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--mute);
+  }
+
+  .fail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: clamp(20px, 2.5vw, 28px);
+    background: rgba(255, 122, 110, 0.08);
+    border: 1px solid rgba(255, 122, 110, 0.35);
+    border-radius: var(--r-md);
+    margin-top: var(--space-md);
+  }
+
+  .fail-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: #ff9d94;
+  }
+
+  .fail-text {
+    font-size: 14px;
+    color: var(--mute);
+  }
+
+  .retry {
+    margin-top: 10px;
+    padding: 12px 26px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg);
+    transition:
+      background 0.3s var(--ease-out),
+      color 0.3s var(--ease-out);
+  }
+
+  .retry:hover {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  @media (max-width: 680px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+
+    .actions :global(.btn) {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

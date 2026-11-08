@@ -20,10 +20,6 @@ metaTitle: "Diseño de Cerveza Artesanal: Branding y Packaging | Refreska"
 metaDescription: "Diseñamos la identidad y el packaging de tu cerveza artesanal en Chile. Desde la marca hasta la etiqueta lista para imprimir. Cotiza hoy."
 ---
 
-# Branding y packaging para que tu cerveza compita en el punto de venta
-
-Diseñamos la identidad y el packaging de tu cerveza para que compita en serio en botillerías, bares y retail.
-
 [Comencemos ahora](#Form)
 
 **Qué hacemos y para quién**

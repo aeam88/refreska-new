@@ -82,6 +82,8 @@ export function createParticles(
     uBurst: { value: 0 },
     uIntro: { value: 0 },
     uMS: { value: 1 },
+    // semiancho de la forma: equivale a la pendiente .11 anterior del degradado
+    uSpan: { value: 1 / (2 * 0.11) },
   };
 
   const material = new THREE.ShaderMaterial({

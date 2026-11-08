@@ -17,10 +17,6 @@ metaTitle: "Diseño Gráfico y Branding Estratégico | Refreska"
 metaDescription: "Diseño gráfico corporativo para empresas chilenas: memorias, catálogos y presentaciones alineados con tu identidad, junto al diseño de packaging y etiquetas."
 ---
 
-# Diseño que comunica el nivel de tu empresa
-
-Diseñamos las piezas gráficas de marcas chilenas que necesitan proyectar su nivel real: memorias, catálogos y presentaciones. Sin decoración vacía, con propósito comercial.
-
 [Comencemos ahora](#Form)
 
 **Qué hacemos y para quién**

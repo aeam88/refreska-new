@@ -74,6 +74,8 @@ const paginas = defineCollection({
     title: z.string(),
     description: z.string(),
     cover: imagen.optional(),
+    /** Si existe, la portada se reemplaza por este texto en partículas */
+    particleText: z.string().optional(),
   }),
 });
 

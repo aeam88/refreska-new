@@ -39,10 +39,6 @@ metaTitle: "Agencia de Branding en Chile | Identidad Visual para Marcas | Refres
 metaDescription: "Estudio de branding en Santiago: estrategia de marca, identidad visual y manual de marca para empresas chilenas que ya venden y necesitan una marca a su altura."
 ---
 
-# Branding para que tu marca refleje el valor de tu negocio
-
-Branding estratégico para empresas que ya tienen clientes y resultados, pero cuya imagen todavía no lo refleja.
-
 Diagnóstico sin costo · Plazos según alcance
 
 [Comencemos ahora](#Form)

@@ -24,13 +24,78 @@ function fromFn(N: number, fn: (i: number) => Pt): Float32Array {
 
 /** Texto rasterizado en canvas 2D → nube de puntos */
 function textShape(str: string, width: number, N: number): Float32Array {
+  const r = rasterText(str);
+  if (!r) return new Float32Array(N * 3);
+
+  const s = width / r.W;
+  return fromFn(N, () => {
+    const p = r.pts[(R() * r.pts.length) | 0];
+    return [
+      (p[0] - r.W / 2) * s + rnd(-0.02, 0.02),
+      -(p[1] - r.H / 2) * s + rnd(-0.02, 0.02),
+      rnd(-0.25, 0.25),
+    ];
+  });
+}
+
+export interface FittedText {
+  /** nube centrada en el origen con los glifos midiendo `w` unidades */
+  points: Float32Array;
+  /** alto de la fuente (em) por unidad de ancho: altoPx = anchoPx · ratio */
+  ratio: number;
+  /** ancho de los glifos dentro del canvas raster (0…0.94) */
+  fill: number;
+}
+
+/**
+ * Texto a escala exacta: los glifos miden `w` unidades de mundo y quedan
+ * centrados en 0. `ratio` y `fill` no dependen de `w` ni del muestreo, así
+ * que sirven para calcular tamaños en pantalla antes de elegir el ancho.
+ */
+export function fitTextShape(str: string, w: number, N: number): FittedText {
+  const empty: FittedText = { points: new Float32Array(N * 3), ratio: 0, fill: 0 };
+  const r = rasterText(str);
+  if (!r) return empty;
+
+  const gw = Math.max(1, r.maxX - r.minX);
+  const k = w / gw; // px de canvas → unidades de mundo
+  const cx = (r.minX + r.maxX) / 2;
+  const cy = (r.minY + r.maxY) / 2;
+
+  const points = fromFn(N, () => {
+    const p = r.pts[(R() * r.pts.length) | 0];
+    return [
+      (p[0] - cx) * k + rnd(-0.002, 0.002) * w,
+      -(p[1] - cy) * k + rnd(-0.002, 0.002) * w,
+      // z queda en la escala de referencia (±0.25, igual que la home): si se
+      // escalara con el ancho, la perspectiva difuminaría las letras
+      rnd(-0.25, 0.25),
+    ];
+  });
+
+  return { points, ratio: (r.fs * k) / w, fill: gw / r.W };
+}
+
+interface Raster {
+  pts: [number, number][];
+  fs: number;
+  W: number;
+  H: number;
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
+}
+
+/** Dibuja el texto en un canvas y devuelve los píxeles + métricas de la caja */
+function rasterText(str: string): Raster | null {
   const c = document.createElement('canvas');
   const W = 1600;
   const H = 400;
   c.width = W;
   c.height = H;
   const x = c.getContext('2d');
-  if (!x) return new Float32Array(N * 3);
+  if (!x) return null;
 
   x.fillStyle = '#fff';
   x.textAlign = 'center';
@@ -45,22 +110,23 @@ function textShape(str: string, width: number, N: number): Float32Array {
 
   const d = x.getImageData(0, 0, W, H).data;
   const pts: [number, number][] = [];
+  let minX = 1e9;
+  let maxX = -1e9;
+  let minY = 1e9;
+  let maxY = -1e9;
   for (let y = 0; y < H; y += 2) {
     for (let X = 0; X < W; X += 2) {
-      if (d[(y * W + X) * 4 + 3] > 128) pts.push([X, y]);
+      if (d[(y * W + X) * 4 + 3] > 128) {
+        pts.push([X, y]);
+        if (X < minX) minX = X;
+        if (X > maxX) maxX = X;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
     }
   }
-  if (!pts.length) return new Float32Array(N * 3);
-
-  const s = width / W;
-  return fromFn(N, () => {
-    const p = pts[(R() * pts.length) | 0];
-    return [
-      (p[0] - W / 2) * s + rnd(-0.02, 0.02),
-      -(p[1] - H / 2) * s + rnd(-0.02, 0.02),
-      rnd(-0.25, 0.25),
-    ];
-  });
+  if (!pts.length) return null;
+  return { pts, fs, W, H, minX, maxX, minY, maxY };
 }
 
 /** Monograma triangular: contorno redondeado + triángulo interior + pata */

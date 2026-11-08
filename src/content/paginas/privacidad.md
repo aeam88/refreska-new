@@ -1,5 +1,5 @@
 ---
-title: "Política de privacidad | Refreska"
+title: "Política de privacidad"
 description: "Cómo Refreska SpA trata los datos personales que recibe en refreska.cl: qué datos, para qué, con quién, por cuánto tiempo y cómo ejercer tus derechos."
 ---
 

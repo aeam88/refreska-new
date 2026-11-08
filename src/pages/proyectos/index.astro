@@ -1,10 +1,21 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Tag from '../../components/ui/Tag.astro';
 
 const proyectos = (await getCollection('proyectos')).sort(
   (a, b) => a.data.order - b.data.order
 );
+
+/**
+ * Proporciones alternadas por tarjeta: como todas las portadas son 16:9,
+ * el recorte variado es lo que genera el ritmo desigual tipo Pinterest.
+ * Todas las ratios son verticales (la más baja es '5 / 6') para que la
+ * grilla sea más alta y el overlay siempre quepa.
+ */
+const RATIOS = ['3 / 4', '1 / 1', '5 / 6', '4 / 5'];
+/** 2 tags + contador: el overlay nunca debe superar la tarjeta más baja */
+const MAX_TAGS = 2;
 ---
 
 <BaseLayout
@@ -16,29 +27,291 @@ const proyectos = (await getCollection('proyectos')).sort(
       <p class="eyebrow-simple">Proyectos</p>
       <h1>Marcas que <span class="grad-text">trabajan.</span></h1>
 
-      <ul class="grid">
+      <ul class="grid" data-masonry>
         {
-          proyectos.map((p) => (
-            <li>
-              <a href={`/${p.id}`}>
-                <img
-                  src={p.data.cover.src}
-                  alt={p.data.cover.alt ?? p.data.title}
-                  loading="lazy"
-                  width="1024"
-                  height="683"
-                />
-                <div class="meta">
-                  <h2>{p.data.title}</h2>
-                  <p class="muted">{p.data.services.join(' · ')}</p>
-                </div>
-              </a>
-            </li>
-          ))
+          proyectos.map((p, i) => {
+            const ratio = RATIOS[i % RATIOS.length];
+            return (
+              <li style={`--ratio: ${ratio}`}>
+                <a href={`/${p.id}`}>
+                  <img
+                    src={p.data.cover.src}
+                    alt={p.data.cover.alt ?? p.data.title}
+                    loading="lazy"
+                    width="1024"
+                    height="576"
+                  />
+                  <div class="meta">
+                    <h2>{p.data.title}</h2>
+                    <p class="tags">
+                      {p.data.services.slice(0, MAX_TAGS).map((s) => (
+                        <Tag>{s}</Tag>
+                      ))}
+                      {p.data.services.length > MAX_TAGS && (
+                        <Tag>+{p.data.services.length - MAX_TAGS}</Tag>
+                      )}
+                    </p>
+                  </div>
+                </a>
+              </li>
+            );
+          })
         }
       </ul>
     </div>
   </section>
+
+  <script is:inline>
+    /**
+     * Masonry con cierre rectangular abajo.
+     * Reparte las tarjetas por fila buscando el reparto que deja las
+     * columnas con la menor diferencia de altura, y reparte ese resto en
+     * proporción: todas las columnas terminan en la misma línea base y el
+     * borde inferior de la grilla queda recto.
+     * Sin JS la grilla sigue funcionando con columnas CSS (fallback).
+     */
+    (function () {
+      var grid = document.querySelector('[data-masonry]');
+      if (!grid) return;
+      var items = Array.prototype.slice.call(grid.children);
+      if (!items.length) return;
+      var timer = 0;
+
+      function columnCount() {
+        var v = parseInt(getComputedStyle(grid).getPropertyValue('--cols'), 10);
+        return v > 0 ? v : 1;
+      }
+
+      /** Altura natural de un ítem colocado fuera del flujo, con un ancho dado */
+      function naturalHeight(el, width) {
+        var pos = el.style.position;
+        var w = el.style.width;
+        var vis = el.style.visibility;
+        el.style.position = 'absolute';
+        el.style.width = width + 'px';
+        el.style.visibility = 'hidden';
+        var h = el.getBoundingClientRect().height;
+        el.style.position = pos;
+        el.style.width = w;
+        el.style.visibility = vis;
+        return h;
+      }
+
+      function clearPlacement() {
+        for (var i = 0; i < items.length; i++) {
+          items[i].style.gridColumn = '';
+          items[i].style.gridRow = '';
+        }
+      }
+
+      function permutations(arr) {
+        if (arr.length <= 1) return [arr.slice()];
+        var out = [];
+        for (var i = 0; i < arr.length; i++) {
+          var rest = arr.slice(0, i).concat(arr.slice(i + 1));
+          var perms = permutations(rest);
+          for (var j = 0; j < perms.length; j++) out.push([arr[i]].concat(perms[j]));
+        }
+        return out;
+      }
+
+      function combinations(arr, k) {
+        if (k === 0) return [[]];
+        if (arr.length < k) return [];
+        var out = [];
+        for (var i = 0; i <= arr.length - k; i++) {
+          var tail = combinations(arr.slice(i + 1), k - 1);
+          for (var j = 0; j < tail.length; j++) out.push([arr[i]].concat(tail[j]));
+        }
+        return out;
+      }
+
+      /** Repartir k ítems de una fila entre n columnas, sin repetir columna */
+      function placements(k, n) {
+        var cols = [];
+        for (var i = 0; i < n; i++) cols.push(i);
+        var out = [];
+        var combos = combinations(cols, k);
+        for (var c = 0; c < combos.length; c++) {
+          var perms = permutations(combos[c]);
+          for (var p = 0; p < perms.length; p++) out.push(perms[p]);
+        }
+        return out;
+      }
+
+      function spread(t) {
+        var max = t[0];
+        var min = t[0];
+        for (var i = 1; i < t.length; i++) {
+          if (t[i] > max) max = t[i];
+          if (t[i] < min) min = t[i];
+        }
+        return max - min;
+      }
+
+      /**
+       * Elige a qué columna va cada tarjeta para que las columnas terminen a
+       * la misma altura. Recorre la grilla de a filas (mantiene el orden de
+       * lectura) y explora las formas de repartir cada fila, descartando los
+       * estados equivalentes. Así ninguna tarjeta queda estirada de más.
+       * `eff` ya incluye el gap de cada ítem.
+       */
+      function assignColumns(eff, n) {
+        var rows = [];
+        for (var i = 0; i < eff.length; i += n) {
+          var row = [];
+          for (var j = i; j < Math.min(i + n, eff.length); j++) row.push(j);
+          rows.push(row);
+        }
+
+        var states = [
+          {
+            t: new Array(n).fill(0),
+            a: new Array(eff.length).fill(0),
+            d: 0,
+          },
+        ];
+
+        var MAX = 3000;
+        for (var r = 0; r < rows.length; r++) {
+          var items = rows[r];
+          var moves = placements(items.length, n);
+          var next = [];
+          var seen = Object.create(null);
+
+          for (var s = 0; s < states.length; s++) {
+            var st = states[s];
+            for (var m = 0; m < moves.length; m++) {
+              var use = moves[m];
+              var t = st.t.slice();
+              var a = st.a.slice();
+              var d = st.d;
+              for (var q = 0; q < items.length; q++) {
+                t[use[q]] += eff[items[q]];
+                a[items[q]] = use[q];
+                d += Math.abs(q - use[q]);
+              }
+              var key = '';
+              for (var c = 0; c < n; c++) key += Math.round(t[c] / 4) + '|';
+              if (key in seen) {
+                // mismo futuro: nos quedamos con el que menos se desvía
+                if (d < next[seen[key]].d) next[seen[key]].d = d;
+                continue;
+              }
+              seen[key] = next.length;
+              next.push({ t: t, a: a, d: d });
+            }
+          }
+
+          next.sort(function (x, y) {
+            return spread(x.t) - spread(y.t) || x.d - y.d;
+          });
+          states = next.slice(0, MAX);
+        }
+
+        states.sort(function (x, y) {
+          return spread(x.t) - spread(y.t) || x.d - y.d;
+        });
+        return states[0].a;
+      }
+
+      function layout() {
+        var n = columnCount();
+
+        // 1 columna: no hay stagger que ordenar, usamos el fallback CSS
+        if (n < 2) {
+          grid.classList.remove('masonry');
+          grid.style.gridTemplateColumns = '';
+          clearPlacement();
+          return;
+        }
+
+        grid.classList.add('masonry');
+        grid.style.gridTemplateColumns = 'repeat(' + n + ', 1fr)';
+        clearPlacement();
+
+        var gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
+        var colWidth = (grid.clientWidth - gap * (n - 1)) / n;
+        if (!(colWidth > 0)) return;
+
+        var i;
+        var c;
+        var heights = [];
+        for (i = 0; i < items.length; i++) {
+          heights.push(naturalHeight(items[i], colWidth));
+        }
+
+        var eff = [];
+        for (i = 0; i < heights.length; i++) eff.push(heights[i] + gap);
+        var colOf = assignColumns(eff, n);
+
+        // Altura natural de cada columna y objetivo común (cierre rectangular)
+        var colSum = [];
+        var colCount = [];
+        var last = [];
+        for (c = 0; c < n; c++) {
+          colSum.push(0);
+          colCount.push(0);
+          last.push(-1);
+        }
+        for (i = 0; i < items.length; i++) {
+          colSum[colOf[i]] += heights[i];
+          colCount[colOf[i]]++;
+          last[colOf[i]] = i;
+        }
+
+        var target = 0;
+        for (c = 0; c < n; c++) {
+          if (!colCount[c]) continue;
+          var natural = colSum[c] + (colCount[c] - 1) * gap;
+          if (natural > target) target = natural;
+        }
+
+        // La diferencia se reparte en proporción entre las tarjetas de la
+        // columna: ninguna queda desproporcionada y todas cierran abajo.
+        var scale = [];
+        for (c = 0; c < n; c++) {
+          scale.push(
+            colCount[c] > 0 && colSum[c] > 0
+              ? (target - (colCount[c] - 1) * gap) / colSum[c]
+              : 1
+          );
+        }
+
+        var y = [];
+        for (c = 0; c < n; c++) y.push(0);
+        var start = [];
+        for (i = 0; i < items.length; i++) {
+          start.push(y[colOf[i]]);
+          y[colOf[i]] += heights[i] * scale[colOf[i]] + gap;
+        }
+
+        for (i = 0; i < items.length; i++) {
+          var top = Math.round(start[i]) + 1;
+          var end =
+            last[colOf[i]] === i
+              ? Math.round(target) + 1
+              : Math.round(start[i] + heights[i] * scale[colOf[i]]) + 1;
+          if (end <= top) end = top + 1;
+          items[i].style.gridColumn = String(colOf[i] + 1);
+          items[i].style.gridRow = top + ' / ' + end;
+        }
+      }
+
+      function schedule() {
+        clearTimeout(timer);
+        timer = setTimeout(layout, 120);
+      }
+
+      layout();
+      window.addEventListener('resize', schedule);
+      window.addEventListener('orientationchange', schedule);
+      window.addEventListener('load', schedule);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(layout);
+      }
+    })();
+  </script>
 </BaseLayout>
 
 <style>
@@ -50,41 +323,160 @@ const proyectos = (await getCollection('proyectos')).sort(
     margin-bottom: var(--space-sm);
   }
 
+  /*
+   * Fallback sin JS: columnas CSS. --cols es la única fuente de verdad de
+   * cuántas tarjetas caben por fila (el JS de masonry la lee del mismo sitio).
+   */
   .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: var(--space-md);
+    --cols: 3;
+    columns: var(--cols);
+    column-gap: var(--space-sm);
     margin-top: var(--space-lg);
   }
 
+  .grid li {
+    break-inside: avoid;
+    margin-bottom: var(--space-sm);
+  }
+
+  /*
+   * Con JS: grid explícito de 1px de alto por fila. Cada tarjeta ocupa un
+   * tramo de filas calculado por altura real y la última de cada columna se
+   * estira hasta la línea base común → el borde inferior queda recto.
+   */
+  .grid.masonry {
+    columns: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1px;
+    column-gap: var(--space-sm);
+    row-gap: 0;
+  }
+
+  .grid.masonry li {
+    break-inside: auto;
+    margin-bottom: 0;
+    min-width: 0;
+  }
+
+  .grid.masonry a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* la imagen crece para llenar el tramo (clave en la última de cada columna) */
+  .grid.masonry img {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
   .grid a {
+    position: relative;
     display: block;
+    overflow: hidden;
+    border-radius: var(--r-md);
+    background: var(--bg-soft);
   }
 
   .grid img {
     width: 100%;
-    height: 280px;
+    height: auto;
+    aspect-ratio: var(--ratio, 16 / 9);
     object-fit: cover;
-    border-radius: var(--r-md);
-    transition: transform 0.5s var(--ease-out);
+    transition: transform 0.6s var(--ease-out);
   }
 
-  .grid a:hover img {
-    transform: scale(1.02);
+  .grid a:hover img,
+  .grid a:focus-visible img {
+    transform: scale(1.04);
   }
 
+  /* Título + tags: superpuestos, entran en hover (y en foco por teclado) */
   .meta {
-    padding-top: var(--space-sm);
+    position: absolute;
+    inset: auto 0 0 0;
+    /* sin padding superior: el degradado cubre la caja y el contenido
+       no puede superar la altura de la tarjeta */
+    max-height: 100%;
+    overflow: hidden;
+    padding: 0 clamp(14px, 1.6vw, 22px) clamp(14px, 1.6vw, 22px);
+    background: linear-gradient(
+      to top,
+      rgba(6, 5, 12, 0.95) 0%,
+      rgba(6, 5, 12, 0.78) 45%,
+      rgba(6, 5, 12, 0) 100%
+    );
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.4s var(--ease-out),
+      transform 0.4s var(--ease-out);
+  }
+
+  .grid a:hover .meta,
+  .grid a:focus-visible .meta {
+    opacity: 1;
+    transform: none;
   }
 
   .meta h2 {
-    font-size: 22px;
+    font-size: clamp(16px, 1.25vw, 21px);
+    line-height: 1.25;
+    color: var(--fg);
+    text-wrap: pretty;
+    /* máx. 2 líneas: el overlay no puede superar la altura de la tarjeta */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  .meta p {
-    font-size: var(--fs-small);
-    margin-top: 6px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  /* Tags compactos dentro de la tarjeta (Tag.astro es global) */
+  .grid :global(.tag) {
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+    padding: 4px 9px;
+  }
+
+  /* Sin hover (táctil): los tags quedan siempre visibles bajo la imagen */
+  @media (hover: none) {
+    .meta {
+      position: static;
+      max-height: none;
+      overflow: visible;
+      padding: var(--space-sm) 2px 2px;
+      background: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    /* sin recorte: el título va completo bajo la imagen */
+    .meta h2 {
+      display: block;
+      -webkit-line-clamp: none;
+      overflow: visible;
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .grid {
+      --cols: 2;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .grid {
+      --cols: 1;
+    }
   }
 </style>

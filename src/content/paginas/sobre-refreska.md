@@ -4,6 +4,9 @@ description: "Alexander Mallea, fundador y director creativo de Refreska. De la 
 cover:
   src: "/assets/img/paginas/sobre-refreska/alexander-mallea-960.avif"
   alt: "Retrato de Alexander Mallea, fundador y director creativo de Refreska, sentado en un taburete de madera con las manos entrelazadas"
+# La portada se muestra como texto de partículas (ParticleText.astro);
+# cover sigue alimentando el og:image.
+particleText: "diseño & branding"
 ---
 
 # De la dirección de arte a un estudio de branding propio

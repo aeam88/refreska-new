@@ -17,10 +17,6 @@ metaTitle: "Branding y Diseño para Restaurantes en Chile | Refreska"
 metaDescription: "Branding, identidad visual, diseño gráfico, packaging y sitio web para restaurantes, cafeterías y negocios gastronómicos en Chile. Cuéntanos tu proyecto."
 ---
 
-# Branding y diseño para que tu restaurante tenga una marca coherente
-
-Construimos la marca de tu restaurante, cafetería o negocio gastronómico: identidad, diseño gráfico, packaging y sitio web.
-
 [Cuéntanos tu proyecto](#Form)
 
 **Qué hacemos y para quién**

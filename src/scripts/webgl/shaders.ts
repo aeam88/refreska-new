@@ -13,7 +13,7 @@ attribute vec3 p4;
 attribute vec3 pS;
 attribute float aRand;
 
-uniform float uProg, uTime, uSize, uPR, uBurst, uIntro, uMS;
+uniform float uProg, uTime, uSize, uPR, uBurst, uIntro, uMS, uSpan;
 uniform vec3 uMouse;
 
 varying vec3 vCol;
@@ -76,7 +76,8 @@ void main() {
   gl_PointSize = uSize * uPR * (.5 + aRand * .9) * (10. / -mv.z) * (1. + push * 1.4);
 
   // degradado turquesa → lima con chispas blanco cálido
-  float g = clamp(wp.x * .11 + .5 + sin(uTime * .25 + wp.y * .2) * .18, 0., 1.);
+  // uSpan = semiancho de la forma: el degradado la recorre entera
+  float g = clamp(wp.x / uSpan * .5 + .5 + sin(uTime * .25 + wp.y * .2) * .18, 0., 1.);
   vCol = mix(vec3(.18, .902, .784), vec3(.722, .949, .29), g);
   vCol = mix(vCol, vec3(1., .953, .839), step(.94, aRand));
   vCol += push * .6;

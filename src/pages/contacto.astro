@@ -1,0 +1,286 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Tag from '../components/ui/Tag.astro';
+import Formulario from '../components/contacto/Formulario.astro';
+
+/** Avatares de clientes (mismo asset que el proof del sitio original) */
+const avatares = [
+  '/assets/img/cliente-luisa-nicolas.webp',
+  '/assets/img/cliente-cristobal-fernanda.webp',
+  '/assets/img/cliente-daniela.webp',
+  '/assets/img/cliente-rina-mario.webp',
+];
+
+/** "Después de enviar": los 3 pasos del flujo de contacto */
+const pasos = [
+  {
+    n: '01',
+    t: 'Revisamos tu caso',
+    d: 'Leemos tu solicitud y revisamos personalmente cada caso para definir el siguiente paso más adecuado.',
+  },
+  {
+    n: '02',
+    t: 'Reunión de diagnóstico',
+    d: 'Conversamos para entender tu negocio, tu competencia y tus objetivos.',
+  },
+  {
+    n: '03',
+    t: 'Propuesta',
+    d: 'Si hay encaje, te presentamos una propuesta con el alcance y las etapas del proyecto.',
+  },
+];
+---
+
+<BaseLayout
+  title="Cotiza tu Proyecto de Branding o Diseño"
+  description="Cuéntanos tu proyecto. Refreska es un estudio boutique de branding, identidad, packaging y diseño web en Chile: revisamos cada caso personalmente."
+  image="/assets/img/og-refreska.jpg"
+>
+  <!-- Hero -->
+  <section class="section hero">
+    <div class="container">
+      <Eyebrow>Somos un estudio de Diseño &amp; Branding</Eyebrow>
+      <h1>Hablemos de <span class="grad-text">tu marca</span></h1>
+      <div class="hero-lead">
+        <p class="lead">
+          Si tu negocio creció, pero tu marca ya no está a la altura, este es el
+          punto de partida.
+        </p>
+        <p class="lead">
+          Cuéntanos en qué etapa estás y te diremos cuál es el mejor próximo paso
+          para ordenar, profesionalizar o rediseñar tu marca.
+        </p>
+      </div>
+
+      <div class="proof">
+        <ul class="avatars" aria-hidden="true">
+          {avatares.map((src) => (
+            <li>
+              <img src={src} alt="" width="46" height="46" />
+            </li>
+          ))}
+        </ul>
+        <p>
+          Empresas chilenas en crecimiento ya confiaron en Refreska para llevar su
+          marca al siguiente nivel.
+        </p>
+      </div>
+    </div>
+
+    <!-- Aurora de la paleta (turquesa → lima → blanco cálido) -->
+    <span class="glow" aria-hidden="true"></span>
+  </section>
+
+  <!-- Formulario -->
+  <section class="section">
+    <div class="container">
+      <div class="card">
+        <div class="head">
+          <Tag>Hablemos de tu marca</Tag>
+          <h2>
+            Diseñemos una marca a la altura de <span class="grad-text">tu negocio</span>
+          </h2>
+          <p class="lead">
+            Cuéntanos en qué momento está tu negocio y qué necesitas resolver.
+            Revisamos personalmente cada caso para definir el siguiente paso más
+            adecuado.
+          </p>
+        </div>
+
+        <Formulario />
+      </div>
+    </div>
+  </section>
+
+  <!-- Después de enviar -->
+  <section class="section steps">
+    <div class="container">
+      <Eyebrow>Después de enviar</Eyebrow>
+      <h2 class="steps-title">Qué pasa después de enviar tu solicitud</h2>
+
+      <ol class="cards">
+        {pasos.map((p) => (
+          <li>
+            <span class="n">{p.n}</span>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ---------- Hero ---------- */
+  /* sin overflow: el aurora del borde inferior sangra suavemente
+     (el recorte horizontal lo hace html con overflow-x: clip) */
+  .hero {
+    position: relative;
+  }
+
+  .hero .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 6vw, 88px);
+    line-height: 1.02;
+    margin-top: var(--space-sm);
+    max-width: 15ch;
+  }
+
+  .hero-lead {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: clamp(22px, 2.4vw, 36px);
+  }
+
+  .hero-lead .lead {
+    max-width: 54ch;
+  }
+
+  .proof {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: clamp(30px, 3.4vw, 52px);
+  }
+
+  .avatars {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  .avatars li {
+    margin-left: -12px;
+  }
+
+  .avatars li:first-child {
+    margin-left: 0;
+  }
+
+  .avatars img {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--bg);
+  }
+
+  .proof p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--mute);
+    max-width: 46ch;
+  }
+
+  .glow {
+    position: absolute;
+    left: -8%;
+    right: -8%;
+    /* el núcleo de los degradados vive en el borde inferior del elemento:
+       con bottom negativo queda bajo el hero y el overflow lo recorta,
+       así que el elemento se mantiene casi dentro y el borde inferior
+       del hero es donde el color se ve más fuerte */
+    bottom: -8%;
+    height: 74%;
+    background:
+      radial-gradient(45% 62% at 18% 92%, rgba(46, 230, 200, 0.5), transparent 70%),
+      radial-gradient(40% 56% at 52% 94%, rgba(184, 242, 74, 0.34), transparent 70%),
+      radial-gradient(42% 56% at 86% 92%, rgba(255, 243, 214, 0.22), transparent 72%);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+
+  /* ---------- Tarjeta del formulario ---------- */
+  .card {
+    max-width: 880px;
+    margin-inline: auto;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: clamp(28px, 4vw, 56px);
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-sm);
+  }
+
+  .head h2 {
+    font-size: clamp(28px, 3.4vw, 50px);
+    line-height: 1.08;
+    max-width: 18ch;
+  }
+
+  .head .lead {
+    max-width: 52ch;
+  }
+
+  /* ---------- Después de enviar ---------- */
+  .steps {
+    background: rgba(255, 255, 255, 0.02);
+    border-block: 1px solid var(--line);
+  }
+
+  .steps-title {
+    font-size: clamp(28px, 3.2vw, 46px);
+    line-height: 1.1;
+    margin-top: var(--space-sm);
+    max-width: 22ch;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(24px, 3vw, 48px);
+    margin-top: var(--space-lg);
+  }
+
+  .cards li {
+    border-top: 1px solid var(--line-strong);
+    padding-top: 20px;
+  }
+
+  .cards .n {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--c1);
+    margin-bottom: 14px;
+  }
+
+  .cards h3 {
+    font-size: clamp(19px, 1.6vw, 24px);
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .cards p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--mute);
+  }
+
+  @media (max-width: 760px) {
+    .hero h1 {
+      font-size: clamp(38px, 10vw, 64px);
+    }
+
+    .cards {
+      grid-template-columns: 1fr;
+    }
+
+    .proof {
+      gap: 14px;
+    }
+  }
+</style>

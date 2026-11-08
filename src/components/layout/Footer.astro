@@ -1,4 +1,6 @@
 ---
+import Icon from '../ui/Icon.astro';
+
 const year = new Date().getFullYear();
 
 const columns = [
@@ -37,12 +39,12 @@ const columns = [
 ];
 
 const socials = [
-  { href: 'https://www.instagram.com/refreska.cl', label: 'Instagram', icon: 'ig' },
-  { href: 'https://www.behance.net/refreska', label: 'Behance', icon: 'be' },
-  { href: 'https://www.linkedin.com/company/refreska/', label: 'LinkedIn', icon: 'in' },
-  { href: 'https://www.facebook.com/refreska.cl', label: 'Facebook', icon: 'fb' },
-  { href: 'https://www.tiktok.com/@refreska', label: 'TikTok', icon: 'tt' },
-];
+  { href: 'https://www.instagram.com/refreska.cl', label: 'Instagram', icon: 'instagram' },
+  { href: 'https://www.behance.net/refreska', label: 'Behance', icon: 'behance' },
+  { href: 'https://www.linkedin.com/company/refreska/', label: 'LinkedIn', icon: 'linkedin' },
+  { href: 'https://www.facebook.com/refreska.cl', label: 'Facebook', icon: 'facebook' },
+  { href: 'https://www.tiktok.com/@refreska', label: 'TikTok', icon: 'tiktok' },
+] as const;
 ---
 
 <footer class="site-footer section">
@@ -60,8 +62,9 @@ const socials = [
             target="_blank"
             rel="noopener noreferrer"
             aria-label={s.label}
+            title={s.label}
           >
-            {s.label}
+            <Icon name={s.icon} size={20} />
           </a>
         ))}
       </div>
@@ -113,17 +116,26 @@ const socials = [
 
   .socials {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 18px;
+    gap: 16px;
     margin-top: var(--space-md);
-    font-size: var(--fs-small);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
     color: var(--mute);
   }
 
-  .socials a:hover {
+  .socials a {
+    display: grid;
+    place-items: center;
+    color: inherit;
+    transition:
+      color 0.25s,
+      transform 0.25s var(--ease-out);
+  }
+
+  .socials a:hover,
+  .socials a:focus-visible {
     color: var(--fg);
+    transform: translateY(-3px);
   }
 
   .footer-title {
