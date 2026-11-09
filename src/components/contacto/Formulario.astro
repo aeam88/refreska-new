@@ -29,9 +29,9 @@ const select = (id: (typeof selects)[number]['id']) =>
   selects.find((s) => s.id === id)!;
 ---
 
-<!-- id="Form": ancla de todos los CTA (/contacto#Form); vive en el wrap para
-     seguir visible cuando el form se reemplaza por el estado de éxito -->
-<div class="form-wrap" id="Form">
+<!-- El ancla #Form la define el contenedor (la tarjeta de /contacto) para que
+     al aterrizar se vea el rectángulo completo desde su borde superior -->
+<div class="form-wrap">
   <form class="form" action="/api/contacto" method="post" data-form-contacto>
     <div class="row">
       <div class="field">
@@ -236,8 +236,6 @@ const select = (id: (typeof selects)[number]['id']) =>
   .form-wrap {
     position: relative;
     margin-top: clamp(28px, 3vw, 44px);
-    /* el ancla /contacto#Form no debe quedar bajo el header fijo */
-    scroll-margin-top: 120px;
   }
 
   .form {

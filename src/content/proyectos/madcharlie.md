@@ -60,6 +60,6 @@ Branding disruptivo y diseño web para Mad Charlies.
 
 ¿Tu marca necesita un diseño estratégico?
 
-[Hablemos de tu proyecto](#Form)
+[Hablemos de tu proyecto](/contacto#Form)
 
 [Cartel del video del proyecto Mad Charlies](https://www.youtube.com/watch?v=5YNXr_SOkSY)

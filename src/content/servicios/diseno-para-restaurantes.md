@@ -17,7 +17,7 @@ metaTitle: "Branding y Diseño para Restaurantes en Chile | Refreska"
 metaDescription: "Branding, identidad visual, diseño gráfico, packaging y sitio web para restaurantes, cafeterías y negocios gastronómicos en Chile. Cuéntanos tu proyecto."
 ---
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 **Qué hacemos y para quién**
 
@@ -27,7 +27,7 @@ Trabajamos con restaurantes, pastelerías, hamburgueserías, sangucherías, pizz
 
 No diseñamos por diseñar: cada decisión visual responde a la estrategia de tu negocio, para que cada punto de contacto se vea y se sienta como la misma marca.
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 ![Ventana de un local con el logotipo de Merken Street Food y empanadas](/assets/img/proyectos/merken-street-food/merken-street-food-02-1920.avif)
 
@@ -83,6 +83,6 @@ Cuéntanos en qué momento está tu negocio y qué necesitas resolver. Revisamos
 
 ## ¿Tienes un proyecto en mente?
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 Completa el formulario y revisamos personalmente tu caso.

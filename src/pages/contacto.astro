@@ -75,7 +75,7 @@ const pasos = [
   <!-- Formulario -->
   <section class="section">
     <div class="container">
-      <div class="card">
+      <div class="card" id="Form">
         <div class="head">
           <Tag>Hablemos de tu marca</Tag>
           <h2>
@@ -205,6 +205,9 @@ const pasos = [
     border: 1px solid var(--line);
     border-radius: var(--r-md);
     padding: clamp(28px, 4vw, 56px);
+    /* ancla /contacto#Form: aterriza en el borde superior del rectángulo
+       (con id en el form quedaba cortado a -246px, viéndose el medio) */
+    scroll-margin-top: 110px;
   }
 
   .head {

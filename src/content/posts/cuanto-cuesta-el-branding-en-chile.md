@@ -58,4 +58,4 @@ Cuando tu empresa está creciendo pero tu imagen no lo refleja. Cuando pierdes p
 
 En Refreska diseñamos marcas para empresas chilenas que quieren proyectar el nivel que realmente tienen. Cuéntanos tu proyecto y revisamos tu caso personalmente.
 
-[Cotiza tu proyecto](/#Form)
+[Cotiza tu proyecto](/contacto#Form)

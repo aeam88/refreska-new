@@ -41,7 +41,7 @@ metaDescription: "Estudio de branding en Santiago: estrategia de marca, identida
 
 Diagnóstico sin costo · Plazos según alcance
 
-[Comencemos ahora](#Form)
+[Comencemos ahora](/contacto#Form)
 
 **Qué hacemos y para quién**
 
@@ -51,7 +51,7 @@ El branding va más allá de un logotipo; es la esencia total de tu presencia en
 
 Trabajamos con empresas chilenas con ventas reales: dueños y equipos de marketing de alimentos, bebidas, tecnología, minería, retail y servicios que necesitan una marca a la altura de su negocio. Antes de diseñar, analizamos tu mercado, tus competidores y tu público objetivo: la estrategia define para qué existe tu marca.
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 ## Casos de branding
 
@@ -125,7 +125,7 @@ Cuéntanos en qué momento está tu negocio y qué necesitas resolver. Revisamos
 
 **Preguntas frecuentes**
 
-Las dudas más comunes antes de empezar un proyecto de branding. ¿No encuentras la tuya? [Escríbenos](#Form).
+Las dudas más comunes antes de empezar un proyecto de branding. ¿No encuentras la tuya? [Escríbenos](/contacto#Form).
 
 ### ¿Cuánto cuesta un proyecto de branding o packaging?
 
@@ -143,6 +143,6 @@ Sí. El proceso es 100% remoto. Hemos trabajado con empresas de todo Chile y con
 
 ## ¿Tienes un proyecto en mente?
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 Completa el formulario y revisamos personalmente tu caso.

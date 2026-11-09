@@ -17,7 +17,7 @@ metaTitle: "Diseño web para empresas en Chile | Refreska"
 metaDescription: "Diseño de sitios web para empresas en Chile. Presenta tus servicios, muestra tu experiencia y facilita el contacto con tus clientes. Conoce Refreska."
 ---
 
-[Cuéntanos tu proyecto web](#Form)
+[Cuéntanos tu proyecto web](/contacto#Form)
 
 **Qué hacemos y para quién**
 
@@ -29,7 +29,7 @@ Trabajamos con marcas que ya tienen un negocio real y necesitan que su web esté
 
 Después del lanzamiento también podemos ofrecer mantención del sitio como servicio opcional; se define y se cotiza por separado según lo que necesites.
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 ![Tienda online de Mad Charlie's en un computador, con el titular «Irish Red Ale» y una lata de cerveza sobre fondo rojo](/assets/img/paginas/digital/madcharlies-01-1024.avif)
 
@@ -85,6 +85,6 @@ Cuéntanos en qué momento está tu negocio y qué necesitas resolver. Revisamos
 
 ## ¿Tienes un proyecto en mente?
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 Completa el formulario y revisamos personalmente tu caso.

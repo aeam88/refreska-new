@@ -182,7 +182,10 @@ export function createParticles(
 
   // ---- estado del loop ----
   const sides = mobile ? [0, 0, 0, 0, 0] : (options.sides ?? DEFAULT_SIDES);
-  const ys = mobile ? [4.8, 3.2, 3.2, 3.2, 3.4] : (options.ys ?? DEFAULT_YS);
+  // ys[0] (hero móvil): ~4.0 deja el REFRESKA a ~70px del navbar (centro de
+  // pantalla ≈ 21%); el bloque de texto se ancla con padding-bottom 40vh para
+  // que el hueco con las partículas se quede en ~100px
+  const ys = mobile ? [4.0, 3.2, 3.2, 3.2, 3.4] : (options.ys ?? DEFAULT_YS);
   const rot = options.rotations ?? DEFAULT_ROT;
 
   let target = 0;

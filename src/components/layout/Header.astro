@@ -148,6 +148,9 @@ const links = [
     font-weight: 800;
     font-size: 22px;
     letter-spacing: -0.02em;
+    /* columnas explícitas: si .nav-desktop se oculta en móvil, el auto-placement
+       mandaba .nav-right a la columna central (el toggle salía al medio) */
+    grid-column: 1;
   }
 
   .nav-desktop {
@@ -158,9 +161,11 @@ const links = [
     letter-spacing: 0.14em;
     text-transform: uppercase;
     justify-self: center;
+    grid-column: 2;
   }
 
   .nav-right {
+    grid-column: 3;
     justify-self: end;
     display: flex;
     align-items: center;
@@ -277,7 +282,8 @@ const links = [
     flex-direction: column;
     gap: 7px;
     width: 34px;
-    padding: 6px 0;
+    /* área táctil ~34×43 sin encoger las líneas (border-box) */
+    padding: 10px 0;
     z-index: calc(var(--z-nav) + 2);
   }
 
@@ -296,11 +302,13 @@ const links = [
     transform: translateY(-4.5px) rotate(-45deg);
   }
 
-  /* Panel móvil */
+  /* Panel móvil: por DEBAJO del header (z 20) para que logo y toggle en X
+     sigan visibles sobre el overlay — antes tapaba al header y no había
+     forma visual de cerrar el menú */
   .nav-mobile {
     position: fixed;
     inset: 0;
-    z-index: calc(var(--z-nav) + 1);
+    z-index: calc(var(--z-nav) - 1);
     background: rgba(6, 5, 12, 0.97);
     backdrop-filter: blur(16px);
     opacity: 0;

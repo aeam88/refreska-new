@@ -41,4 +41,4 @@ El error más costoso: ver el diseño como algo estético y no como una herramie
 
 Si tu startup necesita construir o renovar su marca, cuéntanos qué necesitas y qué inversión estás considerando. Así podemos evaluar el alcance y el siguiente paso.
 
-[Habla con nosotros](/#Form)
+[Habla con nosotros](/contacto#Form)

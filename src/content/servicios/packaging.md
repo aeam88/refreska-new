@@ -20,7 +20,7 @@ metaTitle: "Diseño de Packaging y Etiquetas en Chile | Refreska"
 metaDescription: "Diseñamos packaging y etiquetas para marcas chilenas: cajas, envases, bolsas, vasos y stickers con identidad de marca y archivos listos para imprenta."
 ---
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 **Qué hacemos y para quién**
 
@@ -30,7 +30,7 @@ El packaging es el primer contacto físico con tu marca. Por eso lo trabajamos c
 
 Trabajamos con marcas de alimentos, bebidas, belleza y productos de consumo. Cuando tienes varias etiquetas o formatos, diseñamos un sistema que escala: cada variante se diferencia y todas se reconocen como la misma marca. Y si ya estás por imprimir, entregamos los archivos listos para imprenta.
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 ![Cajas de la línea Facial de Bloom Box en tonos verde agua, una cerrada y otra abierta](/assets/img/proyectos/bloombox/bloombox-03-1920.avif)
 
@@ -86,6 +86,6 @@ Cuéntanos en qué momento está tu negocio y qué necesitas resolver. Revisamos
 
 ## ¿Tienes un proyecto en mente?
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 Completa el formulario y revisamos personalmente tu caso.
