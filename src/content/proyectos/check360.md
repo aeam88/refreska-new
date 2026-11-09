@@ -53,4 +53,4 @@ Branding e identidad digital para Check360.
 
 ¿Tu empresa necesita un branding profesional y estratégico?
 
-[Hablemos de tu proyecto](#Form)
+[Hablemos de tu proyecto](/contacto#Form)

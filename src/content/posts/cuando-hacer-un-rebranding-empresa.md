@@ -41,4 +41,4 @@ Sistema de identidad de Check360 pensado para pantallas, piezas impresas y vía 
 
 En Refreska acompañamos a empresas en procesos de rebranding con un proceso ordenado: primero un diagnóstico para entender qué vale la pena conservar y qué necesita evolucionar. Conoce nuestro [branding estratégico](/branding) y [cuánto cuesta el branding en Chile](/blog/cuanto-cuesta-el-branding-en-chile).
 
-[Solicita tu diagnóstico sin costo](/#Form)
+[Solicita tu diagnóstico sin costo](/contacto#Form)

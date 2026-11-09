@@ -62,4 +62,4 @@ Diseñamos un sistema visual que comunica ritmo, energía y comunidad sin perder
 
 ¿Tu marca necesita moverse con más propósito?
 
-[Hablemos de tu proyecto](#Form)
+[Hablemos de tu proyecto](/contacto#Form)

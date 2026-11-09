@@ -56,4 +56,4 @@ Un estudio especializado en packaging cervecero suele trabajar en tres etapas: e
 
 Diseñamos el packaging de tu cerveza artesanal con criterio estratégico y entregamos archivos listos para imprenta. Cuéntanos tu proyecto. Conoce también nuestro trabajo de [branding y packaging para cervecerías](/cervecero) y de [diseño de packaging y etiquetas](/packaging).
 
-[Cotiza tu packaging](/#Form)
+[Cotiza tu packaging](/contacto#Form)

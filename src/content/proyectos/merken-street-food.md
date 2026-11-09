@@ -52,4 +52,4 @@ Si tienes un restaurante, food truck o marca de alimentos, en Refreska diseñamo
 
 Llevemos tu marca gastronómica al siguiente nivel.
 
-[Hablemos de tu proyecto](#Form)
+[Hablemos de tu proyecto](/contacto#Form)

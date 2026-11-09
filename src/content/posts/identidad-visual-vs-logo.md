@@ -41,4 +41,4 @@ Las marcas sin un sistema de identidad suelen gastar más a largo plazo: cada di
 
 En Refreska diseñamos sistemas de identidad completos para empresas chilenas en crecimiento. Desde el diagnóstico hasta el manual de marca listo para usar. Conoce nuestro [branding estratégico](/branding).
 
-[Cotiza tu identidad](/#Form)
+[Cotiza tu identidad](/contacto#Form)

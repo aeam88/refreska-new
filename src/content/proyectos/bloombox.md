@@ -48,4 +48,4 @@ Creamos la identidad de Bloom Box desde cero: un logotipo distintivo y un sistem
 
 En Refreska, nos especializamos en branding estratégico para empresas que buscan una identidad visual profesional y diferenciadora. Si quieres potenciar tu marca con diseño de logotipo, identidad corporativa o [packaging personalizado](/packaging), escríbenos.
 
-[Hablemos de tu proyecto](#Form)
+[Hablemos de tu proyecto](/contacto#Form)

@@ -64,4 +64,4 @@ Digital Deals necesitaba una marca reconocible y directa en el competitivo mundo
 
 La identidad combina un azul eléctrico distintivo con una tipografía clara y con carácter. El sistema visual es flexible y se aplica en campañas digitales, redes sociales y publicidad.
 
-[Hablemos de tu proyecto](#Form)
+[Hablemos de tu proyecto](/contacto#Form)

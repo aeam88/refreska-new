@@ -291,6 +291,17 @@ import LineReveal from '../components/ui/LineReveal.astro';
       padding-bottom: 18vh;
     }
 
+    /* El REFRESKA móvil está fijo a ~24% de la altura del viewport: el bloque
+       se ancla desde ARRIBO con padding-top = partículas + ~100px, para que el
+       hueco sea estable en cualquier alto (con ancla abajo se cerraba a 32px
+       en pantallas cortas). Misma especificidad que .p-section.center pero
+       va después → gana */
+    .p-section.hero {
+      align-items: flex-start;
+      padding-top: calc(24vh + 100px);
+      padding-bottom: 0;
+    }
+
     .p-block {
       max-width: 100%;
       gap: var(--space-sm);

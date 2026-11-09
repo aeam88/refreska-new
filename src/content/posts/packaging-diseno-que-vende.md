@@ -41,4 +41,4 @@ Hay señales claras: tu producto se pierde entre la competencia en el lineal, lo
 
 Diseñamos packaging estratégico para marcas chilenas de alimentos, bebidas y productos de consumo. Desde el concepto hasta el arte final listo para imprenta. Como referencia, un proyecto de packaging o etiqueta parte desde $600.000 + IVA; el valor final depende del alcance. Conoce nuestro servicio de [diseño de packaging y etiquetas](/packaging).
 
-[Cotiza tu packaging](/#Form)
+[Cotiza tu packaging](/contacto#Form)

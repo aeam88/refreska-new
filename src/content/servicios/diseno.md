@@ -17,7 +17,7 @@ metaTitle: "Diseño Gráfico y Branding Estratégico | Refreska"
 metaDescription: "Diseño gráfico corporativo para empresas chilenas: memorias, catálogos y presentaciones alineados con tu identidad, junto al diseño de packaging y etiquetas."
 ---
 
-[Comencemos ahora](#Form)
+[Comencemos ahora](/contacto#Form)
 
 **Qué hacemos y para quién**
 
@@ -27,7 +27,7 @@ El diseño no es solo apariencia; es la esencia total de tu presencia en el merc
 
 Trabajamos con empresas chilenas que ya venden y necesitan que sus materiales se vean a la altura de su negocio. Las piezas corporativas y el packaging forman un solo sistema visual, por eso diseñamos catálogos, presentaciones, etiquetas y envases con los mismos criterios de identidad.
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 ![Cajas de Bloom Box de las líneas Facial, Capilar y una rosada, sobre fondo rosado](/assets/img/paginas/diseno/diseno-05-1920.avif)
 
@@ -83,6 +83,6 @@ Cuéntanos en qué momento está tu negocio y qué necesitas resolver. Revisamos
 
 ## ¿Tienes un proyecto en mente?
 
-[Cuéntanos tu proyecto](#Form)
+[Cuéntanos tu proyecto](/contacto#Form)
 
 Completa el formulario y revisamos personalmente tu caso.
