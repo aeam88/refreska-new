@@ -7,14 +7,7 @@ const proyectos = (await getCollection('proyectos')).sort(
   (a, b) => a.data.order - b.data.order
 );
 
-/**
- * Proporciones alternadas por tarjeta: como todas las portadas son 16:9,
- * el recorte variado es lo que genera el ritmo desigual tipo Pinterest.
- * Todas las ratios son verticales (la más baja es '5 / 6') para que la
- * grilla sea más alta y el overlay siempre quepa.
- */
 const RATIOS = ['3 / 4', '1 / 1', '5 / 6', '4 / 5'];
-/** 2 tags + contador: el overlay nunca debe superar la tarjeta más baja */
 const MAX_TAGS = 2;
 ---
 
@@ -62,14 +55,7 @@ const MAX_TAGS = 2;
   </section>
 
   <script is:inline>
-    /**
-     * Masonry con cierre rectangular abajo.
-     * Reparte las tarjetas por fila buscando el reparto que deja las
-     * columnas con la menor diferencia de altura, y reparte ese resto en
-     * proporción: todas las columnas terminan en la misma línea base y el
-     * borde inferior de la grilla queda recto.
-     * Sin JS la grilla sigue funcionando con columnas CSS (fallback).
-     */
+    
     (function () {
       var grid = document.querySelector('[data-masonry]');
       if (!grid) return;
@@ -82,7 +68,6 @@ const MAX_TAGS = 2;
         return v > 0 ? v : 1;
       }
 
-      /** Altura natural de un ítem colocado fuera del flujo, con un ancho dado */
       function naturalHeight(el, width) {
         var pos = el.style.position;
         var w = el.style.width;
@@ -126,7 +111,6 @@ const MAX_TAGS = 2;
         return out;
       }
 
-      /** Repartir k ítems de una fila entre n columnas, sin repetir columna */
       function placements(k, n) {
         var cols = [];
         for (var i = 0; i < n; i++) cols.push(i);
@@ -148,14 +132,6 @@ const MAX_TAGS = 2;
         }
         return max - min;
       }
-
-      /**
-       * Elige a qué columna va cada tarjeta para que las columnas terminen a
-       * la misma altura. Recorre la grilla de a filas (mantiene el orden de
-       * lectura) y explora las formas de repartir cada fila, descartando los
-       * estados equivalentes. Así ninguna tarjeta queda estirada de más.
-       * `eff` ya incluye el gap de cada ítem.
-       */
       function assignColumns(eff, n) {
         var rows = [];
         for (var i = 0; i < eff.length; i += n) {
@@ -194,7 +170,6 @@ const MAX_TAGS = 2;
               var key = '';
               for (var c = 0; c < n; c++) key += Math.round(t[c] / 4) + '|';
               if (key in seen) {
-                // mismo futuro: nos quedamos con el que menos se desvía
                 if (d < next[seen[key]].d) next[seen[key]].d = d;
                 continue;
               }
@@ -218,7 +193,6 @@ const MAX_TAGS = 2;
       function layout() {
         var n = columnCount();
 
-        // 1 columna: no hay stagger que ordenar, usamos el fallback CSS
         if (n < 2) {
           grid.classList.remove('masonry');
           grid.style.gridTemplateColumns = '';
@@ -245,7 +219,6 @@ const MAX_TAGS = 2;
         for (i = 0; i < heights.length; i++) eff.push(heights[i] + gap);
         var colOf = assignColumns(eff, n);
 
-        // Altura natural de cada columna y objetivo común (cierre rectangular)
         var colSum = [];
         var colCount = [];
         var last = [];
@@ -267,8 +240,6 @@ const MAX_TAGS = 2;
           if (natural > target) target = natural;
         }
 
-        // La diferencia se reparte en proporción entre las tarjetas de la
-        // columna: ninguna queda desproporcionada y todas cierran abajo.
         var scale = [];
         for (c = 0; c < n; c++) {
           scale.push(
@@ -322,11 +293,6 @@ const MAX_TAGS = 2;
     color: var(--c1);
     margin-bottom: var(--space-sm);
   }
-
-  /*
-   * Fallback sin JS: columnas CSS. --cols es la única fuente de verdad de
-   * cuántas tarjetas caben por fila (el JS de masonry la lee del mismo sitio).
-   */
   .grid {
     --cols: 3;
     columns: var(--cols);
@@ -339,11 +305,6 @@ const MAX_TAGS = 2;
     margin-bottom: var(--space-sm);
   }
 
-  /*
-   * Con JS: grid explícito de 1px de alto por fila. Cada tarjeta ocupa un
-   * tramo de filas calculado por altura real y la última de cada columna se
-   * estira hasta la línea base común → el borde inferior queda recto.
-   */
   .grid.masonry {
     columns: none;
     display: grid;
@@ -365,7 +326,6 @@ const MAX_TAGS = 2;
     height: 100%;
   }
 
-  /* la imagen crece para llenar el tramo (clave en la última de cada columna) */
   .grid.masonry img {
     flex: 1 1 auto;
     min-height: 0;
@@ -392,12 +352,9 @@ const MAX_TAGS = 2;
     transform: scale(1.04);
   }
 
-  /* Título + tags: superpuestos, entran en hover (y en foco por teclado) */
   .meta {
     position: absolute;
     inset: auto 0 0 0;
-    /* sin padding superior: el degradado cubre la caja y el contenido
-       no puede superar la altura de la tarjeta */
     max-height: 100%;
     overflow: hidden;
     padding: 0 clamp(14px, 1.6vw, 22px) clamp(14px, 1.6vw, 22px);
@@ -425,7 +382,6 @@ const MAX_TAGS = 2;
     line-height: 1.25;
     color: var(--fg);
     text-wrap: pretty;
-    /* máx. 2 líneas: el overlay no puede superar la altura de la tarjeta */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -439,7 +395,6 @@ const MAX_TAGS = 2;
     margin-top: 8px;
   }
 
-  /* Tags compactos dentro de la tarjeta (Tag.astro es global) */
   .grid :global(.tag) {
     font-size: 10px;
     line-height: 1;
@@ -448,7 +403,6 @@ const MAX_TAGS = 2;
     padding: 4px 9px;
   }
 
-  /* Sin hover (táctil): los tags quedan siempre visibles bajo la imagen */
   @media (hover: none) {
     .meta {
       position: static;
@@ -460,7 +414,6 @@ const MAX_TAGS = 2;
       transform: none;
     }
 
-    /* sin recorte: el título va completo bajo la imagen */
     .meta h2 {
       display: block;
       -webkit-line-clamp: none;

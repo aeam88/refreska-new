@@ -2,12 +2,6 @@ import { defineCollection } from 'astro:content';
 import { z } from 'zod';
 import { glob, file } from 'astro/loaders';
 
-/**
- * Rutas de imagen: se guardan como strings con la ruta pública
- * (ej: "/assets/img/proyectos/madcharlie/madcharlie-01-1024.avif").
- * Usar preferentemente la variante "-1024"; el componente
- * ResponsiveImage deriva -640/-1920 en build si existen.
- */
 
 const imagen = z.object({
   src: z.string(),
@@ -49,7 +43,7 @@ const servicios = defineCollection({
         })
       )
       .default([]),
-    projects: z.array(z.string()).default([]), // slugs de proyectos relacionados
+    projects: z.array(z.string()).default([]),
     metaTitle: z.string().optional(),
     metaDescription: z.string().optional(),
   }),
@@ -60,7 +54,7 @@ const posts = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    date: z.string(), // ISO: 2026-11-06
+    date: z.string(),
     cover: imagen,
     tags: z.array(z.string()).default([]),
     readingTime: z.string().optional(),
@@ -74,7 +68,6 @@ const paginas = defineCollection({
     title: z.string(),
     description: z.string(),
     cover: imagen.optional(),
-    /** Si existe, la portada se reemplaza por este texto en partículas */
     particleText: z.string().optional(),
   }),
 });
@@ -108,7 +101,6 @@ const faq = defineCollection({
   }),
 });
 
-/** Datos generales del sitio: contacto, redes, opciones del formulario */
 const sitio = defineCollection({
   loader: file('./src/data/sitio.json'),
   schema: z.object({

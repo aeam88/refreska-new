@@ -1,6 +1,3 @@
-/**
- * Integración de motion: Lenis (smooth scroll) + GSAP ScrollTrigger.
- */
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -10,7 +7,6 @@ gsap.registerPlugin(ScrollTrigger);
 export const isReduced = () =>
   matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/** Smooth scroll con Lenis; null si reduced-motion */
 export function initSmoothScroll() {
   if (isReduced()) return null;
   const lenis = new Lenis({ lerp: 0.08 });
@@ -21,15 +17,9 @@ export function initSmoothScroll() {
 }
 
 interface RevealOptions {
-  /** Secciones que anima el intro (se excluyen del reveal por scroll) */
   skipIntro?: boolean;
 }
 
-/**
- * Reveals por sección: líneas (.line > span) entran desde abajo con stagger,
- * el resto (.eyebrow, .lead, .tags, .btn, [data-reveal-item]) sube con fade.
- * Reversible al salir de la sección (toggleActions).
- */
 export function initSectionReveals({ skipIntro = false }: RevealOptions = {}) {
   if (isReduced()) return;
 

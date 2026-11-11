@@ -29,7 +29,6 @@ const title = String(data.title ?? entry.id);
 const description = String(data.metaDescription ?? data.description ?? data.summary ?? '');
 const esProyecto = entry.collection === 'proyectos';
 const esServicio = entry.collection === 'servicios';
-/** Si el markdown ya trae su propio <h1>, no repetimos el del frontmatter */
 const h1EnContenido = headings.some((h) => h.depth === 1);
 const muestraHead = !h1EnContenido || esProyecto || esServicio;
 ---
@@ -240,8 +239,6 @@ const muestraHead = !h1EnContenido || esProyecto || esServicio;
     list-style: decimal;
   }
 
-  /* Grillas de imágenes: listas con <img> e imágenes sueltas agrupadas
-     (div.img-grid que crea el plugin img-grid de astro.config) → 2 por fila */
   .prose .img-grid,
   .prose ul:has(img) {
     display: grid;

@@ -1,36 +1,23 @@
-/**
- * Escena de partículas Three.js: renderer, cámara, morph por scroll,
- * repulsión de mouse, burst al click y polvo de fondo.
- * Devuelve null si no hay soporte WebGL o el usuario pidió reduced-motion.
- */
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { createShapes, scatterShape } from './shapes';
 import { vertexShader, fragmentShader } from './shaders';
 
 export interface ParticlesHandle {
-  /** Uniformes expuestos para que el intro (loader) anime uIntro */
   uniforms: Record<string, { value: unknown }>;
-  /** Progreso absoluto de morph: 0 = forma hero, N-1 = última forma */
   setTargetProgress: (p: number) => void;
-  /** Ráfaga radial (click) */
   burst: () => void;
-  /** Resuelve cuando las formas están construidas (fuentes listas) */
   ready: Promise<void>;
   dispose: () => void;
 }
 
 export interface SceneOptions {
-  /** Desplazamiento lateral por forma (desktop): opuesto al texto */
   sides?: number[];
-  /** Desplazamiento vertical por forma */
   ys?: number[];
-  /** Rotación [x, y] objetivo por forma */
   rotations?: [number, number][];
 }
 
 const DEFAULT_SIDES = [0, -3.4, 3.4, -3.4, 0];
-// ys[0]: el texto queda justo debajo del navbar (zona superior)
 const DEFAULT_YS = [2.15, 0, 0, 0, 0];
 const DEFAULT_ROT: [number, number][] = [
   [0, 0],
@@ -82,7 +69,6 @@ export function createParticles(
     uBurst: { value: 0 },
     uIntro: { value: 0 },
     uMS: { value: 1 },
-    // semiancho de la forma: equivale a la pendiente .11 anterior del degradado
     uSpan: { value: 1 / (2 * 0.11) },
   };
 
@@ -106,7 +92,6 @@ export function createParticles(
       ]);
       await document.fonts.ready;
     } catch {
-      /* sin fuentes: se usa la por defecto */
     }
 
     const shapes = createShapes({ N, mobile });
@@ -125,7 +110,6 @@ export function createParticles(
     scene.add(points);
   })();
 
-  // ---- polvo de fondo ----
   const dustGeo = new THREE.BufferGeometry();
   const dustN = mobile ? 600 : 1500;
   const dustPos = new Float32Array(dustN * 3);
@@ -148,7 +132,6 @@ export function createParticles(
   );
   scene.add(dust);
 
-  // ---- interacción ----
   const mouseNdc = new THREE.Vector2();
   const mouseTarget = new THREE.Vector3(99, 99, 0);
   const ray = new THREE.Raycaster();
@@ -180,11 +163,8 @@ export function createParticles(
   };
   addEventListener('resize', onResize);
 
-  // ---- estado del loop ----
   const sides = mobile ? [0, 0, 0, 0, 0] : (options.sides ?? DEFAULT_SIDES);
-  // ys[0] (hero móvil): ~4.0 deja el REFRESKA a ~70px del navbar (centro de
-  // pantalla ≈ 21%); el bloque de texto se ancla con padding-bottom 40vh para
-  // que el hueco con las partículas se quede en ~100px
+ 
   const ys = mobile ? [4.0, 3.2, 3.2, 3.2, 3.4] : (options.ys ?? DEFAULT_YS);
   const rot = options.rotations ?? DEFAULT_ROT;
 

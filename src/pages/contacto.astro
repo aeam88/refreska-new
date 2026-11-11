@@ -4,7 +4,7 @@ import Eyebrow from '../components/ui/Eyebrow.astro';
 import Tag from '../components/ui/Tag.astro';
 import Formulario from '../components/contacto/Formulario.astro';
 
-/** Avatares de clientes (mismo asset que el proof del sitio original) */
+
 const avatares = [
   '/assets/img/cliente-luisa-nicolas.webp',
   '/assets/img/cliente-cristobal-fernanda.webp',
@@ -12,7 +12,6 @@ const avatares = [
   '/assets/img/cliente-rina-mario.webp',
 ];
 
-/** "Después de enviar": los 3 pasos del flujo de contacto */
 const pasos = [
   {
     n: '01',
@@ -37,7 +36,6 @@ const pasos = [
   description="Cuéntanos tu proyecto. Refreska es un estudio boutique de branding, identidad, packaging y diseño web en Chile: revisamos cada caso personalmente."
   image="/assets/img/og-refreska.jpg"
 >
-  <!-- Hero -->
   <section class="section hero">
     <div class="container">
       <Eyebrow>Somos un estudio de Diseño &amp; Branding</Eyebrow>
@@ -68,11 +66,9 @@ const pasos = [
       </div>
     </div>
 
-    <!-- Aurora de la paleta (turquesa → lima → blanco cálido) -->
     <span class="glow" aria-hidden="true"></span>
   </section>
 
-  <!-- Formulario -->
   <section class="section">
     <div class="container">
       <div class="card" id="Form">
@@ -93,7 +89,6 @@ const pasos = [
     </div>
   </section>
 
-  <!-- Después de enviar -->
   <section class="section steps">
     <div class="container">
       <Eyebrow>Después de enviar</Eyebrow>
@@ -113,9 +108,7 @@ const pasos = [
 </BaseLayout>
 
 <style>
-  /* ---------- Hero ---------- */
-  /* sin overflow: el aurora del borde inferior sangra suavemente
-     (el recorte horizontal lo hace html con overflow-x: clip) */
+ 
   .hero {
     position: relative;
   }
@@ -183,10 +176,6 @@ const pasos = [
     position: absolute;
     left: -8%;
     right: -8%;
-    /* el núcleo de los degradados vive en el borde inferior del elemento:
-       con bottom negativo queda bajo el hero y el overflow lo recorta,
-       así que el elemento se mantiene casi dentro y el borde inferior
-       del hero es donde el color se ve más fuerte */
     bottom: -8%;
     height: 74%;
     background:
@@ -197,7 +186,6 @@ const pasos = [
     pointer-events: none;
   }
 
-  /* ---------- Tarjeta del formulario ---------- */
   .card {
     max-width: 880px;
     margin-inline: auto;
@@ -205,8 +193,7 @@ const pasos = [
     border: 1px solid var(--line);
     border-radius: var(--r-md);
     padding: clamp(28px, 4vw, 56px);
-    /* ancla /contacto#Form: aterriza en el borde superior del rectángulo
-       (con id en el form quedaba cortado a -246px, viéndose el medio) */
+    
     scroll-margin-top: 110px;
   }
 
@@ -228,7 +215,6 @@ const pasos = [
     max-width: 52ch;
   }
 
-  /* ---------- Después de enviar ---------- */
   .steps {
     background: rgba(255, 255, 255, 0.02);
     border-block: 1px solid var(--line);

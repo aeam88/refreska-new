@@ -6,7 +6,6 @@ const res = await p.evaluate(async (url) => {
   const img = new Image(); img.src = url; await img.decode();
   const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
   const x = c.getContext('2d'); x.drawImage(img, 0, 0);
-  // píxeles "de partículas" (teal/verde brillantes) en la zona izquierda-media (monograma)
   const d = x.getImageData(200, 150, 500, 600).data;
   let teal = 0;
   for (let i = 0; i < d.length; i += 4) {

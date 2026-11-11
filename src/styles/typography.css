@@ -1,4 +1,4 @@
-/* Tipografía display — líneas con reveal (overflow hidden) */
+
 h1,
 h2,
 h3,
@@ -33,7 +33,6 @@ p {
   font-weight: 300;
 }
 
-/* Bloque de línea animable (GSAP mueve el span interno) */
 .line {
   display: block;
   overflow: hidden;

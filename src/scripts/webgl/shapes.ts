@@ -1,9 +1,3 @@
-/**
- * Generadores de formas para el sistema de partículas.
- * Cada forma retorna un Float32Array de N*3 posiciones (centradas en el origen).
- * La forma 0 es siempre el texto "REFRESKA" (se usa como forma del hero).
- */
-
 const TAU = Math.PI * 2;
 const R = Math.random;
 const rnd = (a: number, b: number) => a + R() * (b - a);
@@ -22,7 +16,6 @@ function fromFn(N: number, fn: (i: number) => Pt): Float32Array {
   return arr;
 }
 
-/** Texto rasterizado en canvas 2D → nube de puntos */
 function textShape(str: string, width: number, N: number): Float32Array {
   const r = rasterText(str);
   if (!r) return new Float32Array(N * 3);
@@ -39,26 +32,18 @@ function textShape(str: string, width: number, N: number): Float32Array {
 }
 
 export interface FittedText {
-  /** nube centrada en el origen con los glifos midiendo `w` unidades */
   points: Float32Array;
-  /** alto de la fuente (em) por unidad de ancho: altoPx = anchoPx · ratio */
   ratio: number;
-  /** ancho de los glifos dentro del canvas raster (0…0.94) */
   fill: number;
 }
 
-/**
- * Texto a escala exacta: los glifos miden `w` unidades de mundo y quedan
- * centrados en 0. `ratio` y `fill` no dependen de `w` ni del muestreo, así
- * que sirven para calcular tamaños en pantalla antes de elegir el ancho.
- */
 export function fitTextShape(str: string, w: number, N: number): FittedText {
   const empty: FittedText = { points: new Float32Array(N * 3), ratio: 0, fill: 0 };
   const r = rasterText(str);
   if (!r) return empty;
 
   const gw = Math.max(1, r.maxX - r.minX);
-  const k = w / gw; // px de canvas → unidades de mundo
+  const k = w / gw;
   const cx = (r.minX + r.maxX) / 2;
   const cy = (r.minY + r.maxY) / 2;
 
@@ -67,8 +52,6 @@ export function fitTextShape(str: string, w: number, N: number): FittedText {
     return [
       (p[0] - cx) * k + rnd(-0.002, 0.002) * w,
       -(p[1] - cy) * k + rnd(-0.002, 0.002) * w,
-      // z queda en la escala de referencia (±0.25, igual que la home): si se
-      // escalara con el ancho, la perspectiva difuminaría las letras
       rnd(-0.25, 0.25),
     ];
   });
@@ -87,7 +70,6 @@ interface Raster {
   maxY: number;
 }
 
-/** Dibuja el texto en un canvas y devuelve los píxeles + métricas de la caja */
 function rasterText(str: string): Raster | null {
   const c = document.createElement('canvas');
   const W = 1600;
@@ -129,7 +111,6 @@ function rasterText(str: string): Raster | null {
   return { pts, fs, W, H, minX, maxX, minY, maxY };
 }
 
-/** Monograma triangular: contorno redondeado + triángulo interior + pata */
 function logoShape(N: number): Float32Array {
   const pts = rasterMonogram();
   if (!pts.length) return new Float32Array(N * 3);
@@ -142,10 +123,6 @@ function logoShape(N: number): Float32Array {
     ];
   });
 }
-
-/** Dibuja el monograma en canvas (triángulo grueso con esquinas
- *  redondeadas, triángulo interior fino y la "pata" que cruza hacia
- *  abajo con su canal de separación) y mapea los píxeles a mundo */
 function rasterMonogram(): Pt[] {
   const S = 420;
   const c = document.createElement('canvas');
@@ -178,11 +155,8 @@ function rasterMonogram(): Pt[] {
     x.stroke();
   };
 
-  // 1) contorno exterior grueso (lineJoin round = esquinas redondeadas)
   strokePoly(tri(210, 250, 150), 44);
-  // 2) triángulo interior fino
   strokePoly(tri(210, 243, 73), 15);
-  // 3) canal de separación: borra el contorno alrededor de la pata
   x.globalCompositeOperation = 'destination-out';
   x.lineWidth = 34;
   x.beginPath();
@@ -190,7 +164,6 @@ function rasterMonogram(): Pt[] {
   x.lineTo(223, 386);
   x.stroke();
   x.globalCompositeOperation = 'source-over';
-  // 4) la pata: conecta el triángulo interior con el exterior
   x.lineWidth = 15;
   x.beginPath();
   x.moveTo(210, 283);
@@ -220,7 +193,6 @@ function rasterMonogram(): Pt[] {
   return px.map(([X, y]) => [(X - ox) * s, -(y - oy) * s, 0]);
 }
 
-/** Lata: cilindro con rims y tapa superior */
 function canShape(N: number): Float32Array {
   const H = 3.5;
   const Rc = 0.98;
@@ -228,7 +200,7 @@ function canShape(N: number): Float32Array {
     const y = rnd(-H / 2, H / 2);
     const t = (y + H / 2) / H;
     let r = Rc;
-    if (t < 0.07 || t > 0.93) r = Rc * 0.87; // necking de los rims
+    if (t < 0.07 || t > 0.93) r = Rc * 0.87;
 
     const k = R();
     if (t > 0.975 && k < 0.4) {
@@ -241,14 +213,12 @@ function canShape(N: number): Float32Array {
       const a = rnd(0, TAU);
       return [Math.cos(a) * rr, -H / 2, Math.sin(a) * rr];
     }
-    // banda de etiqueta ligeramente más salida
     if (t > 0.28 && t < 0.62 && k < 0.45) r *= 1.02;
     const a = rnd(0, TAU);
     return [Math.cos(a) * r, y, Math.sin(a) * r];
   });
 }
 
-/** Ruido de valor 3D (para continentes del globo) */
 function hash3(x: number, y: number, z: number) {
   const s = Math.sin(x * 12.9898 + y * 78.233 + z * 37.719) * 43758.5453;
   return s - Math.floor(s);
@@ -267,7 +237,6 @@ function vnoise(x: number, y: number, z: number) {
   );
 }
 
-/** Globo terráqueo con continentes por ruido */
 function globeShape(N: number): Float32Array {
   const r = 2.6;
   return fromFn(N, () => {
@@ -288,7 +257,6 @@ function globeShape(N: number): Float32Array {
   });
 }
 
-/** Toroide (nudo toroidal P=2 Q=3) */
 function knotShape(N: number): Float32Array {
   const P = 2;
   const Q = 3;
@@ -311,7 +279,6 @@ function knotShape(N: number): Float32Array {
   });
 }
 
-/** Nube dispersa usada para la entrada (intro) de las partículas */
 export function scatterShape(N: number): Float32Array {
   return fromFn(N, () => {
     const u = rnd(-1, 1);
@@ -327,10 +294,6 @@ export interface ShapeOptions {
   mobile: boolean;
 }
 
-/**
- * Devuelve las formas en orden de morph:
- * [0] REFRESKA · [1] escudo/monograma · [2] lata · [3] globo · [4] nudo
- */
 export function createShapes({ N, mobile }: ShapeOptions): Float32Array[] {
   return [
     textShape('REFRESKA', mobile ? 6.8 : 10, N),

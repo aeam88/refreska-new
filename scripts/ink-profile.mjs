@@ -1,9 +1,6 @@
 import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
 
-// Uso: node scripts/ink-profile.mjs <png> <x> <y> <w> <h>
-// Devuelve un perfil de "tinta" por fila (píxeles claros) para ver si hay
-// banda de separación entre líneas de un título.
 const [file, x0, y0, w, h] = process.argv.slice(2);
 const X = Number(x0), Y = Number(y0), W = Number(w), H = Number(h);
 const dataUrl = `data:image/png;base64,${readFileSync(file).toString('base64')}`;

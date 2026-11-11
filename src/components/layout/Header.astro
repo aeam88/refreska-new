@@ -67,7 +67,6 @@ const links = [
   const panel = document.getElementById('nav-mobile');
   const header = document.getElementById('site-header');
 
-  // Fondo al hacer scroll
   const onScroll = () => {
     header?.classList.toggle('is-scrolled', window.scrollY > 40);
   };
@@ -135,8 +134,6 @@ const links = [
     padding-block: 16px;
   }
 
-  /* El blend se aplica por elemento (no en el contenedor),
-     para que el dropdown se componga por encima del contenido */
   .logo,
   .nav-link,
   .nav-toggle {
@@ -148,8 +145,6 @@ const links = [
     font-weight: 800;
     font-size: 22px;
     letter-spacing: -0.02em;
-    /* columnas explícitas: si .nav-desktop se oculta en móvil, el auto-placement
-       mandaba .nav-right a la columna central (el toggle salía al medio) */
     grid-column: 1;
   }
 
@@ -226,7 +221,6 @@ const links = [
     color: var(--bg);
   }
 
-  /* Dropdown servicios */
   .nav-item {
     position: relative;
   }
@@ -276,13 +270,11 @@ const links = [
     color: var(--fg);
   }
 
-  /* Toggle móvil */
   .nav-toggle {
     display: none;
     flex-direction: column;
     gap: 7px;
     width: 34px;
-    /* área táctil ~34×43 sin encoger las líneas (border-box) */
     padding: 10px 0;
     z-index: calc(var(--z-nav) + 2);
   }
@@ -302,9 +294,6 @@ const links = [
     transform: translateY(-4.5px) rotate(-45deg);
   }
 
-  /* Panel móvil: por DEBAJO del header (z 20) para que logo y toggle en X
-     sigan visibles sobre el overlay — antes tapaba al header y no había
-     forma visual de cerrar el menú */
   .nav-mobile {
     position: fixed;
     inset: 0;
