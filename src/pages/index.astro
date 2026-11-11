@@ -14,7 +14,6 @@ import LineReveal from '../components/ui/LineReveal.astro';
 >
   <ParticleCanvas loader hint="Haz click para estallar" />
 
-  <!-- 0 · Hero (forma: texto REFRESKA) -->
   <section class="p-section center hero" data-reveal data-intro data-i="0">
     <div class="p-block">
       <Eyebrow>Estudio de diseño & branding — Chile</Eyebrow>
@@ -35,7 +34,6 @@ import LineReveal from '../components/ui/LineReveal.astro';
     </div>
   </section>
 
-  <!-- 1 · Branding (forma: botella) -->
   <section class="p-section right" data-reveal data-i="1">
     <div class="p-block">
       <Eyebrow>01 — Branding</Eyebrow>
@@ -55,7 +53,6 @@ import LineReveal from '../components/ui/LineReveal.astro';
     </div>
   </section>
 
-  <!-- 2 · Packaging (forma: lata) -->
   <section class="p-section" data-reveal data-i="2">
     <div class="p-block">
       <Eyebrow>02 — Packaging</Eyebrow>
@@ -75,7 +72,6 @@ import LineReveal from '../components/ui/LineReveal.astro';
     </div>
   </section>
 
-  <!-- 3 · Alcance (forma: globo) -->
   <section class="p-section right" data-reveal data-i="3">
     <div class="p-block">
       <Eyebrow>03 — Alcance</Eyebrow>
@@ -95,7 +91,6 @@ import LineReveal from '../components/ui/LineReveal.astro';
     </div>
   </section>
 
-  <!-- 4 · CTA (forma: nudo) -->
   <section class="p-section center" data-reveal data-i="4">
     <div class="p-block wide">
       <Eyebrow>04 — Siguiente</Eyebrow>
@@ -153,7 +148,6 @@ import LineReveal from '../components/ui/LineReveal.astro';
     max-width: min(900px, 80vw);
   }
 
-  /* Más aire entre el REFRESKA de partículas y el eyebrow del hero */
   .hero .p-block {
     position: relative;
     top: 10vh;
@@ -177,7 +171,6 @@ import LineReveal from '../components/ui/LineReveal.astro';
     margin-top: var(--space-md);
   }
 
-  /* meta del hero */
   .hero-meta {
     display: flex;
     gap: 60px;
@@ -210,7 +203,6 @@ import LineReveal from '../components/ui/LineReveal.astro';
     margin-top: var(--space-sm);
   }
 
-  /* Indicador de scroll: mouse (óvalo + punto ruedita) y línea animada */
   .scroll-ind {
     display: flex;
     flex-direction: column;
@@ -291,11 +283,6 @@ import LineReveal from '../components/ui/LineReveal.astro';
       padding-bottom: 18vh;
     }
 
-    /* El REFRESKA móvil está fijo a ~24% de la altura del viewport: el bloque
-       se ancla desde ARRIBO con padding-top = partículas + ~100px, para que el
-       hueco sea estable en cualquier alto (con ancla abajo se cerraba a 32px
-       en pantallas cortas). Misma especificidad que .p-section.center pero
-       va después → gana */
     .p-section.hero {
       align-items: flex-start;
       padding-top: calc(24vh + 100px);

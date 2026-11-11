@@ -1,16 +1,9 @@
 import { chromium } from 'playwright';
 
-/**
- * QA de /contacto: DOM, ancla #Form, estados del formulario (endpoint
- * simulado con page.route) y capturas desktop/móvil.
- * Uso: node scripts/shot-contacto.mjs
- */
 const BASE = 'http://localhost:4321/contacto';
 const OUT = 'scripts/shots/contacto';
 const b = await chromium.launch({ args: ['--enable-unsafe-swiftshader'] });
 
-/** El dev toolbar de Astro pinta un fantasma tras el scroll/fullPage: esperar
- *  y quitarlo del DOM antes de capturar (no existe en producción) */
 const settle = async (pg) => {
   await pg.waitForTimeout(1600);
   await pg.evaluate(() => document.querySelector('astro-dev-toolbar')?.remove());
@@ -44,7 +37,6 @@ const dom = await p.evaluate(() => {
 console.log('DOM:', JSON.stringify(dom, null, 1));
 await p.screenshot({ path: `${OUT}-1440.png`, fullPage: true });
 
-// ancla /contacto#Form (botón "Hablemos" del header)
 await p.goto(`${BASE}#Form`, { waitUntil: 'networkidle' });
 await settle(p);
 const anchor = await p.evaluate(() => {
@@ -54,7 +46,6 @@ const anchor = await p.evaluate(() => {
 console.log('ANCLA #Form:', JSON.stringify(anchor));
 await p.screenshot({ path: `${OUT}-anchor.png` });
 
-// estado de éxito (endpoint simulado 200)
 await p.route('**/api/contacto', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }));
 await p.goto(BASE, { waitUntil: 'networkidle' });
 await p.fill('#nombre', 'Brad Pitt');
@@ -73,7 +64,6 @@ console.log('ESTADO OK: panel de éxito visible');
 await settle(p);
 await p.screenshot({ path: `${OUT}-success.png` });
 
-// estado de error (endpoint simulado 500) + reintento
 await p.unroute('**/api/contacto');
 await p.route('**/api/contacto', (r) => r.fulfill({ status: 500, body: 'err' }));
 await p.goto(BASE, { waitUntil: 'networkidle' });
@@ -92,14 +82,12 @@ console.log('ESTADO FAIL:', (await p.textContent('[data-fail]')).replace(/\s+/g,
 await settle(p);
 await p.screenshot({ path: `${OUT}-fail.png` });
 
-// validación nativa: un envío vacío no navega ni llama al endpoint
 await p.unroute('**/api/contacto');
 await p.goto(BASE, { waitUntil: 'networkidle' });
 await p.evaluate(() => document.querySelector('#Form form').requestSubmit());
 await p.waitForTimeout(400);
 console.log('VALIDACIÓN nativa → sigue en /contacto:', p.url().endsWith('/contacto'));
 
-// móvil
 const m = await b.newPage({ viewport: { width: 390, height: 844 } });
 m.on('console', (x) => { if (x.type() === 'error') errors.push('mobile: ' + x.text()); });
 await m.goto(BASE, { waitUntil: 'networkidle' });

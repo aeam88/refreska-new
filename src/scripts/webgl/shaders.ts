@@ -1,9 +1,3 @@
-/**
- * Shaders del sistema de partículas:
- * morph entre formas con stagger, sway en tránsito, entrada desde scatter,
- * repulsión por mouse, burst al click y colores por acento.
- */
-
 export const vertexShader = /* glsl */ `
 attribute vec3 p0;
 attribute vec3 p1;

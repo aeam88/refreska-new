@@ -1,11 +1,4 @@
 ---
-/**
- * Formulario de contacto — UI (Fase 4). El backend es Fase 6
- * (`POST /api/contacto`): hasta entonces el envío muestra el estado de error.
- *
- * Estructura, copy y placeholders replican el formulario original del sitio.
- * Los selects leen sus opciones de `sitio.json` (formOptions).
- */
 import { getCollection } from 'astro:content';
 import Btn from '../ui/Btn.astro';
 
@@ -17,7 +10,6 @@ const formOptions = sitio?.data.formOptions ?? {
   presupuesto: [],
 };
 
-/** Fila de 2 columnas; en móvil baja a 1 (ver estilos) */
 const selects = [
   { id: 'plazo', label: '¿Cuándo te gustaría comenzar?', options: formOptions.plazo },
   { id: 'etapa', label: '¿En qué etapa está tu negocio?', options: formOptions.etapa },
@@ -29,8 +21,6 @@ const select = (id: (typeof selects)[number]['id']) =>
   selects.find((s) => s.id === id)!;
 ---
 
-<!-- El ancla #Form la define el contenedor (la tarjeta de /contacto) para que
-     al aterrizar se vea el rectángulo completo desde su borde superior -->
 <div class="form-wrap">
   <form class="form" action="/api/contacto" method="post" data-form-contacto>
     <div class="row">
@@ -152,7 +142,6 @@ const select = (id: (typeof selects)[number]['id']) =>
       información en la <a href="/privacidad">Política de Privacidad</a>.
     </p>
 
-    <!-- Honeypot anti-spam: oculto para personas, visible para bots -->
     <div class="hp" aria-hidden="true">
       <label for="rfk-website">No completar este campo</label>
       <input type="text" id="rfk-website" name="website" tabindex="-1" autocomplete="off" />
@@ -180,11 +169,6 @@ const select = (id: (typeof selects)[number]['id']) =>
 </div>
 
 <script>
-  /**
-   * Envío del formulario (fetch) con estados: enviando → éxito / error.
-   * El endpoint llega en Fase 6; mientras tanto cualquier respuesta
-   * distinta de 2xx muestra el estado de error, conservando lo escrito.
-   */
   document.querySelectorAll<HTMLFormElement>('form[data-form-contacto]').forEach((form) => {
     const wrap = form.parentElement;
     if (!wrap) return;
@@ -244,7 +228,6 @@ const select = (id: (typeof selects)[number]['id']) =>
     gap: var(--space-sm);
   }
 
-  /* [hidden] debe ganarle a los display:flex de estos bloques */
   .form[hidden],
   .done[hidden],
   .fail[hidden] {
@@ -308,7 +291,6 @@ const select = (id: (typeof selects)[number]['id']) =>
     background-position: right 18px center;
   }
 
-  /* opción aún no elegida: mismo tono que un placeholder */
   .field select:invalid {
     color: var(--mute-2);
   }
@@ -338,7 +320,6 @@ const select = (id: (typeof selects)[number]['id']) =>
     text-underline-offset: 3px;
   }
 
-  /* honeypot: fuera de pantalla, no interactivo */
   .hp {
     position: absolute;
     width: 1px;
@@ -362,7 +343,6 @@ const select = (id: (typeof selects)[number]['id']) =>
     transform: none;
   }
 
-  /* ---- estados ---- */
   .done {
     display: flex;
     flex-direction: column;

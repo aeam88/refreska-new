@@ -17,7 +17,6 @@ for (const width of widths) {
     const h2 = document.querySelector('.prose h2');
     const h2p = h2?.nextElementSibling;
 
-    // nº de líneas del h1 (rects de rango) + solapamiento vertical entre líneas
     const range = document.createRange();
     range.selectNodeContents(h1);
     const rects = [...range.getClientRects()].filter((x) => x.height > 4);

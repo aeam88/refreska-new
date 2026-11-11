@@ -1,13 +1,4 @@
 ---
-/**
- * Texto de partículas que vive en el flujo (para reemplazar una imagen).
- * Usa los mismos shaders que el canvas de la home: entrada desde la nube,
- * sway, repulsión por mouse y burst al click.
- *
- * El ancho del texto = el de las partículas REFRESKA de la home (o el 96%
- * del contenedor, lo que sea menor). Sin WebGL o con reduced-motion queda
- * el texto plano, con el mismo tamaño (--pt-em lo setea el script).
- */
 interface Props {
   text?: string;
 }
@@ -45,7 +36,6 @@ const { text = 'diseño & branding' } = Astro.props;
     height: 100%;
   }
 
-  /* Texto plano: se ve mientras no hay WebGL y sirve de fallback */
   .pt-static {
     position: relative;
     max-width: 100%;
@@ -73,20 +63,18 @@ const { text = 'diseño & branding' } = Astro.props;
 
   const TAN_HALF = Math.tan((45 / 2) * (Math.PI / 180));
   const CAM_Z = 11;
-  /** alto del mundo visible en z=0 (fov 45°, cámara en CAM_Z) */
   const WORLD_H = 2 * TAN_HALF * CAM_Z;
-  const HOME_W = 10; // ancho de la forma REFRESKA en la home
+  const HOME_W = 10;
 
   const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /** Ancho en px que ocupan las partículas REFRESKA de la home */
   function refreskaPx(fill: number) {
     const vw = innerWidth;
     const vh = innerHeight;
-    const z = vw / vh < 1 ? 17 : 11; // misma regla que scene.ts
+    const z = vw / vh < 1 ? 17 : 11;
     const mobile = matchMedia('(max-width: 760px)').matches;
-    const world = mobile ? 6.8 * 0.72 : HOME_W; // + points.scale(.72) en móvil
+    const world = mobile ? 6.8 * 0.72 : HOME_W;
     return (world * fill * vh) / (2 * TAN_HALF * z);
   }
 
@@ -99,7 +87,6 @@ const { text = 'diseño & branding' } = Astro.props;
     const text = wrap.dataset.text?.trim();
     if (!canvas || !text) return;
 
-    // el raster depende de la fuente: esperamos (máx. 2.5s)
     (async () => {
       try {
         await Promise.race([
@@ -108,7 +95,6 @@ const { text = 'diseño & branding' } = Astro.props;
         ]);
         await document.fonts.ready;
       } catch {
-        /* sin fuentes: se usa la por defecto */
       }
       build(text, canvas);
     })();
@@ -119,20 +105,17 @@ const { text = 'diseño & branding' } = Astro.props;
       const PR = Math.min(devicePixelRatio, 2);
 
       const home = fitTextShape('REFRESKA', HOME_W, 1);
-      const probe = fitTextShape(str, HOME_W, 1); // solo métricas: ratio/fill
-      // sin raster no hay nada que armar: queda el texto plano
+      const probe = fitTextShape(str, HOME_W, 1);
+      
       if (!home.fill || !probe.ratio) return;
 
       const ratio = probe.ratio;
       const targetW = () =>
         Math.min(refreskaPx(home.fill), wrap.clientWidth * 0.96);
 
-      // densidad constante por superficie de texto: el mismo texto en un
-      // bloque chico no debe saturar en blanco (additive blending)
       const N = Math.round(clamp(targetW() * (targetW() * ratio) * 0.172, 1500, 16000));
       const base = fitTextShape(str, HOME_W, N).points;
 
-      /** Alto del bloque y tamaño del texto plano según el ancho objetivo */
       const applySize = () => {
         const emPx = targetW() * ratio;
         const h = Math.round(clamp(emPx * 2.4, 140, 300));
@@ -141,7 +124,7 @@ const { text = 'diseño & branding' } = Astro.props;
         return emPx;
       };
 
-      // reduced-motion: mismo tamaño que tendrían las partículas, sin WebGL
+      
       if (reduced) {
         applySize();
         return;
@@ -156,7 +139,7 @@ const { text = 'diseño & branding' } = Astro.props;
           powerPreference: 'high-performance',
         });
       } catch {
-        return; // sin WebGL: se ve el texto plano
+        return; 
       }
       renderer.setPixelRatio(PR);
       renderer.setClearColor(0x000000, 0);
@@ -186,7 +169,6 @@ const { text = 'diseño & branding' } = Astro.props;
         fragmentShader,
       });
 
-      // p0 = texto; p1…p4 no se usan (uProg queda en 0) pero el shader las pide
       const zeros = new Float32Array(N * 3);
       const p0 = base.slice();
       const geo = new THREE.BufferGeometry();
@@ -200,10 +182,9 @@ const { text = 'diseño & branding' } = Astro.props;
       geo.setAttribute('aRand', new THREE.BufferAttribute(rand, 1));
 
       const cloud = new THREE.Points(geo, material);
-      cloud.frustumCulled = false; // position se reescala en cada resize
+      cloud.frustumCulled = false;
       scene.add(cloud);
 
-      /** Reencaja: alto del bloque, tamaño del renderer y escala del texto */
       const fit = () => {
         const w = wrap.clientWidth;
         if (w < 40) return;
@@ -213,15 +194,11 @@ const { text = 'diseño & branding' } = Astro.props;
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
 
-        // el punto se mantiene ~4px donde la home los usa y baja en textos
-        // chicos (si no, las letras quedan lavadas)
         U.uSize.value = clamp(4.8 * (emPx / 100), 2.2, 4.8);
 
         const worldW = (targetW() * WORLD_H) / h;
         const k = worldW / HOME_W;
-        // x e y escalan con el ancho; z se acota para que la perspectiva
-        // difumine ~5px en el borde (Δ ≈ anchoPx · z / 22), proporcional a lo
-        // que se ve en la home con letras del doble de alto
+      
         const zAmp = clamp(110 / targetW(), 0.05, 1);
         for (let i = 0; i < p0.length; i += 3) {
           p0[i] = base[i] * k;
@@ -233,7 +210,6 @@ const { text = 'diseño & branding' } = Astro.props;
         U.uSpan.value = worldW / 2;
       };
 
-      // ---- interacción ----
       const ndc = new THREE.Vector2();
       const mouseTarget = new THREE.Vector3(99, 99, 0);
       const ray = new THREE.Raycaster();
@@ -265,7 +241,6 @@ const { text = 'diseño & branding' } = Astro.props;
         )
       );
 
-      // ---- loop: solo a la vista y con la pestaña activa ----
       let raf = 0;
       let running = false;
       let inView = false;

@@ -12,8 +12,8 @@
   const ring = document.getElementById('cursor-ring');
 
   if (!reduced && fine && dot && ring) {
-    let x = -100, y = -100; // destino del punto
-    let rx = -100, ry = -100; // destino del anillo (lerp)
+    let x = -100, y = -100;
+    let rx = -100, ry = -100;
     let cx = -100, cy = -100;
 
     addEventListener('pointermove', (e) => {
@@ -28,7 +28,6 @@
       ring.style.opacity = '0';
     });
 
-    // Anillo agrandado sobre enlaces/botones
     document.querySelectorAll('a, button, [data-cursor="big"]').forEach((el) => {
       el.addEventListener('mouseenter', () => ring.classList.add('is-big'));
       el.addEventListener('mouseleave', () => ring.classList.remove('is-big'));
@@ -86,7 +85,6 @@
     background: rgba(255, 255, 255, 0.08);
   }
 
-  /* Solo desktop con puntero fino y sin reduced-motion */
   @media (pointer: coarse), (prefers-reduced-motion: reduce) {
     .cursor-dot,
     .cursor-ring {

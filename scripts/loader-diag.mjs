@@ -3,7 +3,7 @@ const b = await chromium.launch({ args: ['--enable-unsafe-swiftshader'] });
 const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
 const t0 = Date.now();
 await p.goto('http://localhost:4321/', { waitUntil: 'domcontentloaded' });
-// muestrear el estado del loader y del pulso
+
 const samples = [];
 for (let i = 0; i < 45; i++) {
   const s = await p.evaluate(() => {

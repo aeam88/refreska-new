@@ -1,11 +1,5 @@
 ---
-/**
- * Capa WebGL fija + loader + HUD.
- * Requiere: secciones con data-reveal en la página, y (si hay loader)
- * data-intro en la sección hero.
- */
 interface Props {
-  /** Contador de formas del morph (definido en shapes.ts) */
   shapes?: number;
   loader?: boolean;
   hud?: boolean;
@@ -61,21 +55,16 @@ const total = String(shapes).padStart(2, '0');
   const shapeCount = Number(canvas?.dataset.shapes ?? 5);
   const reduced = isReduced();
 
-  // Smooth scroll (Lenis + ScrollTrigger)
   initSmoothScroll();
 
-  // Escena WebGL
   const handle = canvas && !reduced ? createParticles(canvas) : null;
 
-  // Sin soporte o reduced-motion: el loader no tiene nada que esperar
   if (loaderEl && !handle) loaderEl.remove();
 
-  // Sin loader: las partículas se muestran desde el inicio
   if (handle && !loaderEl) {
     handle.uniforms.uIntro.value = 1;
   }
 
-  // Progreso de scroll global → morph de formas + HUD
   const main = document.querySelector('main');
   if (handle && main) {
     ScrollTrigger.create({
@@ -151,7 +140,6 @@ const total = String(shapes).padStart(2, '0');
     display: block;
   }
 
-  /* Loader — centrado y compacto */
   #loader {
     position: fixed;
     inset: 0;
@@ -173,7 +161,6 @@ const total = String(shapes).padStart(2, '0');
     text-align: center;
   }
 
-  /* Línea que se va llenando */
   .fill-line {
     width: min(260px, 64vw);
     height: 2px;
@@ -204,7 +191,6 @@ const total = String(shapes).padStart(2, '0');
     }
   }
 
-  /* HUD de sección */
   .hud {
     position: fixed;
     left: var(--pad-x);
